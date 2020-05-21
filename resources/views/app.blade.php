@@ -102,10 +102,16 @@
     <!-- Main JS -->
     <script src="{{asset('_landing/assets/js/main.js')}}"></script>
 
+
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     <script type="text/javascript">
         @if(session('failure'))
         toastr.error('{{session("failure")}}');
+        @endif
+        @if(count($errors)>0)
+        @foreach($errors->all() as $error)
+        toastr.error('{{$error}}');
+        @endforeach
         @endif
         @if(session('success'))
         toastr.success('{{session("success")}}');

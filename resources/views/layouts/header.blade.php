@@ -12,7 +12,7 @@
                     <div class="header-top-menu">
                         <ul>
                             <li><a href="#">My account</a></li>
-                            <li><a href="#">Checkout</a></li>
+                            <li><a href="{{route('cart.checkout')}}">Checkout</a></li>
                         </ul>
                     </div>
                     <!-- end of header top menu -->
@@ -59,7 +59,7 @@
                         <!-- end of search bar -->
                         <!-- shopping cart -->
                         <div class="shopping-cart" id="shopping-cart">
-                            <a href="#">
+                            <a href="{{route('user.cart')}}">
                                 <div class="cart-icon d-inline-block">
                                     <span class="fa fa-shopping-cart"></span>
                                 </div>
@@ -99,8 +99,8 @@
                                     </div>--}}
                                     <div class="cart-calculation">
                                         <div class="floating-cart-btn text-center">
-                                            <a href="{{route('checkout')}}">Checkout</a>
-                                            <a href="#">View Cart</a>
+                                            <a href="{{route('cart.checkout')}}">Checkout</a>
+                                            <a href="{{route('user.cart')}}">View Cart</a>
                                         </div>
                                     </div>
                                 </div>
@@ -125,7 +125,7 @@
                                     </ul>--}}
                                 </li>
                                 <li class="{{--menu-item-has-children--}}">
-                                    <a href="">Products</a>
+                                    <a href="{{route('products.all')}}">Products</a>
                                     {{--<ul class="sub-menu d-none">
                                         <li class="menu-item-has-children"><a href="shop-4-column.html">shop grid</a>
                                             <ul class="sub-menu">

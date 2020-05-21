@@ -25,13 +25,9 @@ Route::get('/registration', function () {
     return view('actions.registration');
 })->name('registration');
 
-Route::get('/user/cart', function () {
-    return view('actions.cart');
-})->name('cart');
-
-Route::get('/user/checkout', function () {
-    return view('actions.checkout');
-})->name('checkout');
+/*Route::get('/user/checkout', function () {
+    return view('actions.c');
+})->name('cart');*/
 
 Route::get('/product/search', function () {
     return view('actions.search');
@@ -107,4 +103,45 @@ Route::get('/user/dashboard', function () {
         'uses' => 'Product\ProductController@searchProductsByCategory',
     ]);
 
+    Route::get('products/brand/{brand_name}', [
+        'as' => 'product.brand',
+        'uses' => 'Product\ProductController@searchProductsByBrand',
+    ]);
+
+    Route::get('products/type/{drink_type}', [
+        'as' => 'product.type',
+        'uses' => 'Product\ProductController@searchProductsByType',
+    ]);
+
+    Route::get('/products', [
+    'as' => 'products.all',
+    'uses' => 'Product\ProductController@viewProducts',
+    ]);
+
+    //newsletter
+    Route::get('/newsletter', [
+        'as' => 'newsletter',
+        'uses' => 'Newsletter\NewsletterController@addNewsletter',
+    ]);
+
+    //cart system
+    Route::get('/cart',[
+        'as' => 'user.cart',
+        'uses' => "Product\ProductController@viewCart"
+    ]);
+
+    Route::post('/product/update-cart',[
+        'as' => 'product.update-cart',
+        'uses' => "Product\ProductController@updateCart"
+    ]);
+
+    Route::post('/cart/remove-product',[
+        'as' => 'cart.remove-product',
+        'uses' => "Product\ProductController@removeProduct"
+    ]);
+
+    Route::get('/cart/checkout',[
+        'as' => 'cart.checkout',
+        'uses' => "Product\ProductController@cartCheckout"
+    ])->middleware('checkAuth');
 

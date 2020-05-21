@@ -46,7 +46,7 @@ class Product extends Model
         //select all products but check if its still in stock
         $products = Product::whereHas('stocks', function($query){
             $query->where('qty','>' , 0);
-        })->inRandomOrder()->get()/*paginate(2)*/;
+        })->inRandomOrder()->/*get()*/paginate(3);
 
         // limit the no of products to be displayed to 20
         /*if (count($products) > 2){
@@ -90,32 +90,79 @@ class Product extends Model
 
     public static function getAllProducts(){
         //get all product that are still in stock and the response should be paginated
-
         $products = Product::whereHas('stocks', function($query){
             $query->where('qty','>' , 0);
         })->inRandomOrder()->paginate(3);
-
         return $products;
 
     }
 
     public static function getProductByName($name){
         //search for a product that has a name close to the name being searched for
-
         $products = Product::whereHas('stocks', function($query){
             $query->where('qty','>' , 0);
         })->where('name', 'LIKE', '%' . $name . '%')->inRandomOrder()->get();
-
         return $products;
     }
 
     public static function getProductByCategory($category){
         //retrieve product drink type to get the id
-        $category = DrinkType::where('name', $category)->first();
+        $drink_category = DrinkType::where('name', $category)->first();
         // search products for drink type match
         $products = Product::whereHas('stocks', function($query){
             $query->where('qty','>' , 0);
-        })->where('drink_type_id', $category->id)->inRandomOrder()->paginate(3);
+        })->where('drink_type_id', $drink_category->id)->inRandomOrder()->paginate(3);
+        //return result
+        return $products;
+    }
+
+    public static function filterProductByCategory($word, $category){
+        $category = DrinkType::where('name', $category)->first();
+        $products = Product::whereHas('stocks', function($query){
+            $query->where('qty','>' , 0);
+        })->where('drink_type_id', $category->id)
+            ->where('name', 'LIKE', '%' . $word . '%')
+            ->inRandomOrder()->get();
+        return $products;
+    }
+
+    public static function filterProductByBrand($word, $brand_name){
+        $brand = Brand::where('brand_name', $brand_name)->first();
+        $products = Product::whereHas('stocks', function($query){
+            $query->where('qty','>' , 0);
+        })->where('brand_id', $brand->id)
+            ->where('name', 'LIKE', '%' . $word . '%')
+            ->inRandomOrder()->get();
+        return $products;
+    }
+
+    public static function filterProductByType($word, $drink_type){
+        $value = $drink_type == 'alcoholic' ? 1 : 0 ;
+        $products = Product::whereHas('stocks', function($query){
+            $query->where('qty','>' , 0);
+        })->where('alcoholic', $value)
+            ->where('name', 'LIKE', '%' . $word . '%')
+            ->inRandomOrder()->get();
+        return $products;
+    }
+
+    public static function getProductByBrand($brand_name){
+        //retrieve product drink type to get the id
+        $brand = Brand::where('brand_name', $brand_name)->first();
+        // search products for drink type match
+        $products = Product::whereHas('stocks', function($query){
+            $query->where('qty','>' , 0);
+        })->where('brand_id', $brand->id)->inRandomOrder()->paginate(3);
+        //return result
+        return $products;
+    }
+
+    public static function getProductByType($drink_type){
+        $value = $drink_type == 'alcoholic' ? 1 : 0 ;
+        // search products for drink type match
+        $products = Product::whereHas('stocks', function($query){
+            $query->where('qty','>' , 0);
+        })->where('alcoholic', $value)->inRandomOrder()->paginate(3);
         //return result
         return $products;
     }

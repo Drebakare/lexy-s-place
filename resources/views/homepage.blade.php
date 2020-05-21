@@ -93,14 +93,16 @@
                         @foreach($categories as $category)
                             <div class="single-category">
                                 <div class="category-image">
-                                    <a href="#" title="Alcoholic">
-                                        <img src="{{asset('_landing/assets/images/products/'.$category->category_image)}}" class="img-fluid" alt="">
+                                    <a href="{{route('product.category', ['category' => $category->name])}}" title="{{$category->name}}">
+                                        <img src="{{asset('_landing/assets/images/products/'.$category->image)}}" class="img-fluid" alt="">
                                     </a>
                                 </div>
                                 <div class="category-title">
-                                    <h3>
-                                        <a href="#">{{$category->name}}</a>
-                                    </h3>
+                                    <a href="{{route('product.category', ['category' => $category->name])}}">
+                                        <h3>
+                                            {{$category->name}}
+                                        </h3>
+                                    </a>
                                 </div>
                             </div>
                         @endforeach
@@ -159,30 +161,52 @@
                                     @endforeach
 
                                 </div>
-                                {{--<div class="pagination-container mt-4">
+                                <div class="pagination-container mt-4">
                                     <div class="container">
                                         <div class="row">
-                                            --}}{{--<div class="col-lg-12">
+                                            <div class="col-lg-12">
                                                 <!--=======  pagination-content  =======-->
---}}{{--
-                                                --}}{{--<div class=" text-center">--}}{{--
+                                                <div class="text-center">
+                                                    <div class="offset-md-5 offset-4">
+                                                        <ul>
+                                                            <li>
+                                                                {{$products->links()}}
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+{{--
+                                <div class="pagination-container mt-4">
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <!--=======  pagination-content  =======-->
+
+                                                <div class=" text-center">
                                                     <div class="offset-md-5 offset-4">
                                                         {{$products->links()}}
                                                     </div>
-                                                    --}}{{--<ul>
+                                                    --}}
+{{--<ul>
                                                         <li><a class="active" href="#">1</a></li>
                                                         <li><a href="#">2</a></li>
                                                         <li><a href="#">3</a></li>
                                                         <li><a href="#">4</a></li>
                                                         <li><a href="#"><i class="fa fa-angle-right"></i></a></li>
                                                     </ul>--}}{{--
-                                                --}}{{--</div>--}}{{--
+
+                                                </div>
 
                                                 <!--=======  End of pagination-content  =======-->
-                                                 --}}{{--</div>--}}{{--
+                                                 </div>
                                         </div>
                                     </div>
-                                </div>--}}
+                                </div>
+--}}
                                 <!--=======  End of tab slider container  =======-->
                             </div>
                             {{--<div class="tab-pane fade" id="new-arrivals" role="tabpanel" aria-labelledby="new-arrival-tab">

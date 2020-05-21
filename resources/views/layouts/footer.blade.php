@@ -23,20 +23,20 @@
                     <div class="subscription-form-wrapper d-flex flex-wrap flex-sm-nowrap">
                         <p class="mb-xs-20">Sign up for our newsletter to get up-to-date from us</p>
                         <div class="subscription-form">
-                            <form  id="mc-form" class="mc-form subscribe-form">
-                                <input type="email" id="mc-email" autocomplete="off" placeholder="Your email address">
+                            <form  {{--id="mc-form"--}} class="mc-form subscribe-form" action="{{route('newsletter')}}">
+                                @csrf
+                                <input type="email" name="email" id="mc-email" autocomplete="off" placeholder="Your email address" required>
                                 <button id="mc-submit" type="submit"> subscribe!</button>
                             </form>
-
                             {{--<!-- mailchimp-alerts Start -->
                             <div class="mailchimp-alerts">
                                 <div class="mailchimp-submitting"></div><!-- mailchimp-submitting end -->
                                 <div class="mailchimp-success"></div><!-- mailchimp-success end -->
                                 <div class="mailchimp-error"></div><!-- mailchimp-error end -->
-                            </div><!-- mailchimp-alerts end -->--}}
+                            </div><!-- mailchimp-alerts end -->
+                            --}}
                         </div>
                     </div>
-
                     <!--=======  End of subscription-form wrapper  =======-->
                 </div>
             </div>
@@ -212,7 +212,7 @@
                             <span class="separator">|</span>
                             <a href="#">Term and conditions</a>
                         </p>
-                        <p class="copyright-text">&copy; 2012 <a href="{{route('homepage')}}">Lexy's Place </a>. All Rights Reserved</p>
+                        <p class="copyright-text">&copy; 2020 <a href="{{route('homepage')}}">Lexy's Place </a>. All Rights Reserved</p>
                     </div>
                     <!--=======  End of copyright text	  =======-->
                 </div>

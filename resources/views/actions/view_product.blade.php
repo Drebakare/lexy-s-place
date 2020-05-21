@@ -222,7 +222,7 @@
                                                         <div class="">
                                                             <ul>
                                                                 <li>
-                                                                    <a  href="#" class="btn btn-sm btn-outline-success">  view all >>> </a>
+                                                                    <a  href="{{route('product.category', ['category' => $product->drinkType->name])}}" class="btn btn-sm btn-outline-success">  view all >>> </a>
                                                                 </li>
                                                             </ul>
                                                         </div>
@@ -282,7 +282,6 @@
 
                                         </div>
                                     @endforeach
-
                                 </div>
                                 @if(count($related_products) > 8)
                                     <div class="pagination-container mt-4">
@@ -295,7 +294,7 @@
                                                         <div class="">
                                                             <ul>
                                                                 <li>
-                                                                    <a  href="#" class="btn btn-sm btn-outline-success">  view all >>> </a>
+                                                                    <a  href="{{route('product.all')}}" class="btn btn-sm btn-outline-success">  view all >>> </a>
                                                                 </li>
                                                             </ul>
                                                         </div>
@@ -330,7 +329,7 @@
                                 <a href="#" class="btn btn-outline-dark mt-0" data-dismiss="modal"><span style="font-size: 14px">Continue Shopping</span></a>
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-12  mb-3">
-                                <a  href="#" class="btn btn-outline-success mt-0"><span style="font-size: 14px">View Cart and Checkout</span> </a>
+                                <a  href="{{route('user.cart')}}" class="btn btn-outline-success mt-0"><span style="font-size: 14px">View Cart and Checkout</span> </a>
                             </div>
                         </div>
                     </div>

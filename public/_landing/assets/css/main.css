@@ -5033,7 +5033,7 @@ p.result-show-message {
 /*-- Place Order --*/
 .place-order {
   margin-top: 10px;
-  width: 250px;
+  width: 200px;
   border-radius: 50px;
   height: 36px;
   border: none;
@@ -6289,4 +6289,8 @@ footer {
 }
 .page-link{
     color: #80bb01 !important;
+}
+
+.pagination{
+    background-color: white !important;
 }

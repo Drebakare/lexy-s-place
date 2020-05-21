@@ -53,8 +53,8 @@
                         <div class="sidebar mb-35">
                             <h3 class="sidebar-title">Filter By</h3>
                             <ul class="product-categories">
-                                <li><a href="#">Alcoholic</a></li>
-                                <li><a href="#">Non-Alcoholic</a></li>
+                                <li><a href="{{route('product.type', ['drink_type' => 'alcoholic'])}}">Alcoholic</a></li>
+                                <li><a href="{{route('product.type', ['drink_type' => 'non-alcoholic'])}}">Non-Alcoholic</a></li>
                             </ul>
                         </div>
 
@@ -62,13 +62,13 @@
                             <h3 class="sidebar-title">Product Brands</h3>
                             <ul class="product-categories">
                                 @foreach($brands as $brand)
-                                    <li><a href="#">{{$brand->brand_name}}</a></li>
+                                    <li><a href="{{route('product.brand', ['brand_name' => $brand->brand_name])}}">{{$brand->brand_name}}</a></li>
                                 @endforeach
                             </ul>
                         </div>
 
 
-                        <div class="sidebar">
+                        {{--<div class="sidebar">
                             <h3 class="sidebar-title">Product Tags</h3>
                             <!--=======  tag container  =======-->
 
@@ -80,7 +80,7 @@
                             </ul>
 
                             <!--=======  End of tag container  =======-->
-                        </div>
+                        </div>--}}
 
                         <!--=======  End of single sidebar  =======-->
                     </div>
