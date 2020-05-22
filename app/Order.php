@@ -26,4 +26,11 @@ class Order extends Model
         return $this->hasMany(OrderSummary::class);
     }
 
+    public static function calculateTotalOrderPrice(){
+        $total = 0.0;
+        foreach (session()->get('cart') as $product){
+            $total = $total + $product["quantity"] * $product["price"];
+        }
+        return $total;
+    }
 }

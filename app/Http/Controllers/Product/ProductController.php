@@ -6,6 +6,7 @@ use App\Brand;
 use App\DrinkType;
 use App\Http\Controllers\Controller;
 use App\Product;
+use App\Tax;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
 use Illuminate\Support\Facades\URL;
@@ -407,10 +408,11 @@ class ProductController extends Controller
             foreach (session()->get('cart') as $product){
                 $total = $total + $product["quantity"] * $product["price"];
             }
+            $tax = Tax::findorfail(1);
         }
         else{
             return redirect(route('homepage'))->with('failure', "You do not have any active cart yet");
         }
-        return view('actions.checkout', compact('total'));
+        return view('actions.checkout', compact('total', 'tax'));
     }
 }

@@ -115,7 +115,7 @@
                                     <h2>Grand Total <span>N {{number_format($total)}}</span></h2>
                                 </div>
                                 <div class="cart-summary-button">
-                                    <button class="checkout-btn">Checkout</button>
+                                    <button onclick="location.href='{{route('cart.checkout')}}'" class="checkout-btn">Checkout</button>
                                     <button class="update-btn">Update Cart</button>
                                 </div>
                             </div>

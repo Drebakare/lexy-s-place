@@ -30,7 +30,8 @@
             <div class="row">
                 <div class="col-12 offset-md-2">
                     <!-- Checkout Form s-->
-                    <form action="#" class="checkout-form">
+                    <form action="{{route('user.make-payment')}}" class="checkout-form" method="post">
+                        @csrf
                         <div class="row row-40">
                             <div class="col-lg-7">
                                 <div class="row">
@@ -51,7 +52,10 @@
 
                                             <p>Sub Total <span>N {{number_format($total)}}</span></p>
                                             <p>Shipping Fee <span>N 00.00</span></p>
+                                            <p style="font-size: x-small">
+                                              Tax  <span>Tax of N {{number_format($total * ($tax->tax/(100 + $tax->tax)))}} inclusive</span>
 
+                                            </p>
                                             <h4>Grand Total <span>N {{number_format($total)}}</span></h4>
 
                                         </div>
@@ -68,20 +72,19 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <label>Table*</label>
-                                            <select class="nice-select">
-                                                <option>1</option>
-                                                <option>2</option>
-                                                <option>3</option>
-                                                <option>4</option>
-                                                <option>5</option>
+                                            <select name="table" id="table-number" class="nice-select">
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                                <option value="5">5</option>
                                             </select>
                                         </div>
-
+                                        <input value="{{$total}}" name="amount" hidden>
                                         <div class="col-md-6 mt-md-4" >
-                                            <button class="place-order" style="width: 100% !important; height: 45px !important; background-color: #80bb01 !important;"> Make Payment Online</button>
+                                            <button type="submit"  class="place-order" style="width: 100% !important; height: 45px !important; background-color: #80bb01 !important;"> Make Payment Online</button>
                                         </div>
                                     </div>
-
                                 </div>
                             </div>
                         </div>
@@ -90,5 +93,5 @@
             </div>
         </div>
     </div>
-
 @endsection
+

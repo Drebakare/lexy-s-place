@@ -16,7 +16,9 @@ use Illuminate\Support\Facades\Route;
         'as' => 'homepage',
         'uses' => 'User\HomepageController@Homepage'
     ]);
-
+Route::get('/success', function () {
+    return view('actions.failure_page');
+})->name('success');
 Route::get('/login', function () {
     return view('actions.login');
 })->name('login');
@@ -145,3 +147,13 @@ Route::get('/user/dashboard', function () {
         'uses' => "Product\ProductController@cartCheckout"
     ])->middleware('checkAuth');
 
+    //payment system
+    Route::post('/user/make-payment',[
+        'as' => 'user.make-payment',
+        'uses' => "Payment\PaymentController@makePayment"
+    ])->middleware('checkAuth');
+
+    Route::get('/user/confirm-payment',[
+        'as' => 'user.confirm-payment',
+        'uses' => "Payment\PaymentController@confirmPayment"
+    ])->middleware('checkAuth');

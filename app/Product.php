@@ -166,4 +166,5 @@ class Product extends Model
         //return result
         return $products;
     }
+
 }

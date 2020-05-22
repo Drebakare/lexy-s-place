@@ -42,6 +42,17 @@
         <footer class="footer">
             @include('layouts.footer')
         </footer>
+        <script type="text/javascript">
+            var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+            (function(){
+                var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+                s1.async=true;
+                s1.src='https://embed.tawk.to/5ec799678ee2956d73a39174/default';
+                s1.charset='UTF-8';
+                s1.setAttribute('crossorigin','*');
+                s0.parentNode.insertBefore(s1,s0);
+            })();
+        </script>
     </div>
     <!-- scroll to top  -->
     <a href="#" class="scroll-top"></a>
@@ -101,6 +112,11 @@
 
     <!-- Main JS -->
     <script src="{{asset('_landing/assets/js/main.js')}}"></script>
+
+    {{--// paystack--}}
+    <script src="https://js.paystack.co/v1/inline.js"></script>
+
+    <script src="{{asset('_landing/assets/js/paystackjs.js')}}"></script>
 
 
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
