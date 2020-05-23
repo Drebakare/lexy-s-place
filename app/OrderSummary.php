@@ -15,4 +15,9 @@ class OrderSummary extends Model
     public function product(){
         return $this->belongsTo(Product::class);
     }
+
+    public static function getOrderSummaries($id){
+        $summaries = OrderSummary::where('order_id', $id)->get();
+        return $summaries;
+    }
 }

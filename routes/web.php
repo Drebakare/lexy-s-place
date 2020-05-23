@@ -35,9 +35,6 @@ Route::get('/product/search', function () {
     return view('actions.search');
 })->name('search');
 
-Route::get('/user/dashboard', function () {
-    return view('actions.dashboard');
-})->name('account');
 
 //User Authentication
     Route::post('/user/registration', [
@@ -55,7 +52,7 @@ Route::get('/user/dashboard', function () {
     Route::get('/logout', [
         'as' => 'logout',
         'uses' => 'Auth\AuthenticationController@Logout'
-    ]);
+    ])->middleware('checkAuth');
     Route::get('/user/change-password/{token}', [
         'as' => 'user.change-password',
         'uses' => 'Auth\AuthenticationController@changePassword'
@@ -84,7 +81,6 @@ Route::get('/user/dashboard', function () {
     ]);
 
     //product processes
-
     Route::get('product/{name}/{token}', [
         'as' => 'customer.view-product',
         'uses' => 'Product\ProductController@viewProduct',
@@ -156,4 +152,25 @@ Route::get('/user/dashboard', function () {
     Route::get('/user/confirm-payment',[
         'as' => 'user.confirm-payment',
         'uses' => "Payment\PaymentController@confirmPayment"
+    ])->middleware('checkAuth');
+
+    // users account
+    Route::get('user/dashboard', [
+        'as' => 'user.dashboard',
+        'uses' => 'User\DashboardController@Dashboard'
+    ])->middleware('checkAuth');
+
+    Route::get('user/view-order/{token}', [
+        'as' => 'user.view-order',
+        'uses' => 'User\DashboardController@viewOrder'
+    ])->middleware('checkAuth');
+
+    Route::post('user/update-profile', [
+        'as' => 'user.update-profile',
+        'uses' => 'User\DashboardController@updateProfile'
+    ])->middleware('checkAuth');
+
+    Route::post('user/update-password', [
+        'as' => 'user.change-password',
+        'uses' => 'User\DashboardController@changePassword'
     ])->middleware('checkAuth');

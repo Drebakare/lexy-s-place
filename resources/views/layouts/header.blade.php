@@ -11,7 +11,7 @@
                     <!-- header top menu -->
                     <div class="header-top-menu">
                         <ul>
-                            <li><a href="#">My account</a></li>
+                            <li><a href="{{route('user.dashboard')}}">My account</a></li>
                             <li><a href="{{route('cart.checkout')}}">Checkout</a></li>
                         </ul>
                     </div>
@@ -162,7 +162,7 @@
                                 </li>
                                 @if(Auth::check())
                                     <li class="{{--menu-item-has-children--}}">
-                                        <a href="{{route('account')}}">Dashboard</a>
+                                        <a href="{{route('user.dashboard')}}">Dashboard</a>
                                     </li>
                                     <li class="{{--menu-item-has-children--}}">
                                         <a href="{{route('logout')}}">Logout</a>

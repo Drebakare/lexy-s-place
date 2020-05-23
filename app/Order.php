@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class Order extends Model
 {
@@ -32,5 +33,14 @@ class Order extends Model
             $total = $total + $product["quantity"] * $product["price"];
         }
         return $total;
+    }
+
+    public static function getUserOrders(){
+        $orders = Order::where('user_id', Auth::user()->id)->orderBy('id','Desc')->get();
+        return $orders;
+    }
+    public static function getOrder($token){
+        $order = Order::where(['user_id'=> Auth::user()->id, 'token' => $token ])->first();
+        return $order;
     }
 }

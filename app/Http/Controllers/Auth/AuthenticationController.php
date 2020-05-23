@@ -43,10 +43,10 @@ class AuthenticationController extends Controller
                 // check role for redirection
                 switch ($role){
                     case 1:
-                        return redirect(route('account'))->with('success', 'Login Successful');
+                        return redirect(route('user.dashboard'))->with('success', 'Login Successful');
                         break;
                     default:
-                        return redirect(route('account'))->with('success', 'Login Successful');
+                        return redirect(route('user.dashboard'))->with('success', 'Login Successful');
                 }
             }
             else{
@@ -81,12 +81,12 @@ class AuthenticationController extends Controller
                             break;
                         }
                         else{
-                            return redirect(route('account'))->with('success', 'Login Successful');
+                            return redirect(route('user.dashboard'))->with('success', 'Login Successful');
                             break;
                         }
                         break;
                     default:
-                        return redirect(route('account'))->with('success', 'Login Successful');
+                        return redirect(route('user.dashboard'))->with('success', 'Login Successful');
                 }
             }
             else{
@@ -205,16 +205,16 @@ class AuthenticationController extends Controller
                     // check role for redirection
                     switch ($role){
                         case 1:
-                            return redirect(route('account'))->with('success', 'Login Successful');
+                            return redirect(route('user.dashboard'))->with('success', 'Login Successful');
                             break;
                         default:
-                            return redirect(route('account'))->with('success', 'Login Successful');
+                            return redirect(route('user.dashboard'))->with('success', 'Login Successful');
                     }
                 }
                 else{
                     User::newUser($user->getEmail(), $user->getEmail(), $user->getName());
                     if (Auth::attempt(['email' => $user->getEmail(), 'password' => $user->getEmail()])) {
-                        return redirect(route('account'))->with('success', 'Authentication Successful');
+                        return redirect(route('user.dashboard'))->with('success', 'Authentication Successful');
                     }
                     else{
                         return redirect(route('login'))->with('failure', 'Account Could Not Be Verified');

@@ -8,7 +8,7 @@
             Having trouble? <span>Message Our Agent Online</span>
         </p>
         <p class="lead">
-            <a style=" background-color: #80bb01 !important; border-color: #80bb01 !important;" class="btn btn-primary btn-sm" href="#">View Your Order</a>
+            <a style=" background-color: #80bb01 !important; border-color: #80bb01 !important;" class="btn btn-primary btn-sm" href="{{route('user.view-order', ['token' => $order->token])}}">View Your Order</a>
         </p>
     </div>
 @endsection

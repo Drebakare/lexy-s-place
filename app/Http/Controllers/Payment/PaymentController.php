@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Order;
 use App\OrderSummary;
 use App\Product;
+use App\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -73,8 +74,11 @@ class PaymentController extends Controller
                 return redirect()->back()->with('failure', "Payment Could not be Process, Kindly Try Again");
 /*                print_r('API returned error: ' . $tranx['message']);*/
             }
-
-            session()->put('reference_id',$create_order->receipt_no);
+            $transaction_summary = [
+                'reference_id' => $create_order->receipt_no,
+                'amount' => $request->amount,
+            ];
+            session()->put('transaction_summary',$transaction_summary);
             return redirect( $tranx['data']['authorization_url']);
         }
         catch (\Exception $exception){
@@ -87,6 +91,7 @@ class PaymentController extends Controller
             $curl = curl_init();
             $reference = isset($_GET['reference']) ? $_GET['reference'] : '';
             if(!$reference){
+                session()->forget('transaction_summary');
                 return view('actions.failure_page')->with('failure', 'Could not be Confirmed.');
             }
             curl_setopt_array($curl, array(
@@ -104,25 +109,41 @@ class PaymentController extends Controller
 
             if($err){
                 // there was an error contacting the Paystack API
+                session()->forget('transaction_summary');
                 return view('actions.failure_page')->with('failure', 'Could not be Confirmed');
             }
 
             $tranx = json_decode($response);
 
             if(!$tranx->status){
+                session()->forget('transaction_summary');
                 return view('actions.failure_page')->with('failure', 'Was not Succcessfull');
             }
 
             if('success' == $tranx->data->status){
+                $transaction_data = session()->get('transaction_summary');
+                $receipt = $transaction_data['reference_id'];
+
                 if (session()->get('cart')){
                     session()->forget('cart');
                 }
-                $set_order_status = Order::where('receipt_no', session()->get('reference_id'))->update([
+                $set_order_status = Order::where('receipt_no', $receipt)->update([
                     'status' => 1
                 ]);
-                $receipt = session()->get('reference_id');
-                session()->forget('reference_id');
-                return view('actions.success_page', compact('receipt'));
+
+                // create transaction
+                $transaction = new Transaction();
+                $transaction->user_id = Auth::user()->id;
+                $transaction->amount = $transaction_data['amount'];
+                $transaction->transaction_no = $transaction_data['reference_id'];
+                $transaction->transaction_type = 'Debit - Order';
+                $transaction->transaction_status = 1;
+                $transaction->token = Str::random(15);
+                $transaction->save();
+
+                session()->forget('transaction_summary');
+                $order = Order::where('receipt_no', $receipt)->first();
+                return view('actions.success_page', compact('order'));
             }
         }
         catch (\Exception $exception){

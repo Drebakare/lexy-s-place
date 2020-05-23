@@ -6294,3 +6294,7 @@ footer {
 .pagination{
     background-color: white !important;
 }
+
+.dataTables_length{
+    text-align: left !important;
+}

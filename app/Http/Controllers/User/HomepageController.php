@@ -13,8 +13,6 @@ class HomepageController extends Controller
     public function Homepage(){
         $products = Product::getSomeProducts();
         $categories = DrinkType::getAllCategories();
-       // $partitioned_products = Product::partitionedProduct($products);
-        //dd($products);
         return view('homepage', compact('products', 'categories'));
     }
 }

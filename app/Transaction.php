@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class Transaction extends Model
 {
@@ -12,5 +13,9 @@ class Transaction extends Model
     ];
     public function user(){
         return $this->belongsTo(User::class);
+    }
+    public static function getUserTransactions(){
+        $transactions = Transaction::where('user_id', Auth::user()->id)->get();
+        return $transactions;
     }
 }

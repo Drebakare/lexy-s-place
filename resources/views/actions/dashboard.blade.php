@@ -46,7 +46,7 @@
 
                                 <a href="#account-info" data-toggle="tab"><i class="fa fa-user"></i> Account Settings</a>
 
-                                <a href="#"><i class="fa fa-sign-out"></i> Logout</a>
+                                <a href="{{route('logout')}}"><i class="fa fa-sign-out"></i> Logout</a>
                             </div>
                         </div>
                         <!-- My Account Tab Menu End -->
@@ -74,43 +74,30 @@
                                         <h3>Orders</h3>
 
                                         <div class="myaccount-table table-responsive text-center">
-                                            <table class="table table-bordered">
+                                            <table id="orders" class="table table-bordered">
                                                 <thead class="thead-light">
                                                 <tr>
-                                                    <th>No</th>
-                                                    <th>Product</th>
-                                                    <th>Date</th>
+                                                    <th>Receipt No</th>
+                                                    <th>Price</th>
+                                                    <th>Table Number</th>
                                                     <th>Status</th>
-                                                    <th>Total</th>
+                                                    <th>Date</th>
+                                                    {{--<th></th>--}}
                                                     <th>Action</th>
                                                 </tr>
                                                 </thead>
 
                                                 <tbody>
-                                                <tr>
-                                                    <td>1</td>
-                                                    <td>Coke</td>
-                                                    <td>Aug 22, 2018</td>
-                                                    <td>Pending</td>
-                                                    <td>N20,00</td>
-                                                    <td><a href="#" class="btn">View</a></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>2</td>
-                                                    <td>Fanta</td>
-                                                    <td>July 22, 2018</td>
-                                                    <td>Approved</td>
-                                                    <td>N10,00</td>
-                                                    <td><a href="#" class="btn">View</a></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>3</td>
-                                                    <td>Sprite</td>
-                                                    <td>June 12, 2017</td>
-                                                    <td>On Hold</td>
-                                                    <td>N20,00</td>
-                                                    <td><a href="#" class="btn">View</a></td>
-                                                </tr>
+                                                @foreach($orders as $order)
+                                                    <tr>
+                                                        <td>{{$order->receipt_no}}</td>
+                                                        <td>{{$order->total_price}}</td>
+                                                        <td> Table - {{$order->table_id}}</td>
+                                                        <td>{{$order->status == 0 ? 'Pending' : "Finished"}}</td>
+                                                        <td>{{Carbon\Carbon::parse($order->created_at)->format('d/m/Y')}}</td>
+                                                        <td><a href="{{route('user.view-order', ['token' => $order->token])}}" class="btn">View</a></td>
+                                                    </tr>
+                                                @endforeach
                                                 </tbody>
                                             </table>
                                         </div>
@@ -122,45 +109,28 @@
                                 <div class="tab-pane fade" id="transactions" role="tabpanel">
                                     <div class="myaccount-content">
                                         <h3>My Transactions</h3>
-
                                         <div class="myaccount-table table-responsive text-center">
-                                            <table class="table table-bordered">
+                                            <table id="transactions" class="table table-bordered">
                                                 <thead class="thead-light">
                                                 <tr>
-                                                    <th>No</th>
-                                                    <th>Product</th>
-                                                    <th>Date</th>
+                                                    <th>Transaction ID</th>
+                                                    <th>Transaction Type</th>
+                                                    <th>Amount</th>
                                                     <th>Status</th>
-                                                    <th>Total</th>
-                                                    <th>Action</th>
+                                                    <th>Date</th>
                                                 </tr>
                                                 </thead>
 
                                                 <tbody>
-                                                <tr>
-                                                    <td>1</td>
-                                                    <td>Coke</td>
-                                                    <td>Aug 22, 2018</td>
-                                                    <td>Pending</td>
-                                                    <td>N20,00</td>
-                                                    <td><a href="#" class="btn">View</a></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>2</td>
-                                                    <td>Fanta</td>
-                                                    <td>July 22, 2018</td>
-                                                    <td>Approved</td>
-                                                    <td>N10,00</td>
-                                                    <td><a href="#" class="btn">View</a></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>3</td>
-                                                    <td>Sprite</td>
-                                                    <td>June 12, 2017</td>
-                                                    <td>On Hold</td>
-                                                    <td>N20,00</td>
-                                                    <td><a href="#" class="btn">View</a></td>
-                                                </tr>
+                                                @foreach($transactions as $transaction)
+                                                    <tr>
+                                                        <td>{{$transaction->transaction_no}}</td>
+                                                        <td>{{$transaction->transaction_type}}</td>
+                                                        <td>{{$transaction->amount}}</td>
+                                                        <td>{{$transaction->transaction_status == 0 ? "Pending" : "Finished"}}</td>
+                                                        <td>{{Carbon\Carbon::parse($transaction->created_at)->format('d/m/Y')}}</td>
+                                                    </tr>
+                                                @endforeach
                                                 </tbody>
                                             </table>
                                         </div>
@@ -174,39 +144,49 @@
                                         <h3>Account Settings</h3>
 
                                         <div class="account-details-form">
-                                            <form action="#">
+                                            <form action="{{route('user.update-profile')}}" method="post" class="mb-50">
+                                                @csrf
                                                 <div class="row">
                                                     <div class="col-lg-6 col-12 mb-30">
-                                                        <input id="first-name" placeholder="First Name" type="text">
+                                                        <input name="first_name" id="first_name" placeholder="First Name" value="{{Auth::user()->last_name != null ? Auth::user()->last_name : "Nill" }}" type="text">
                                                     </div>
 
                                                     <div class="col-lg-6 col-12 mb-30">
-                                                        <input id="last-name" placeholder="Last Name" type="text">
+                                                        <input name="last_name" id="last_name" placeholder="Last Name" value="{{Auth::user()->first_name != null ? Auth::user()->first_name : "Nill" }}" type="text">
                                                     </div>
 
                                                     <div class="col-6 mb-30">
-                                                        <input id="email" placeholder="Email Address" type="email">
+                                                        <input id="email" value="{{Auth::user()->email}}" placeholder="Email Address" type="email" disabled>
                                                     </div>
                                                     <div class="col-6 mb-30">
-                                                        <input id="dob" placeholder="DOB" type="date">
-                                                    </div>
-
-                                                    <div class="col-12 mb-30"><h4>Password change</h4></div>
-
-                                                    <div class="col-12 mb-30">
-                                                        <input id="current-pwd" placeholder="Current Password" type="password">
-                                                    </div>
-
-                                                    <div class="col-lg-6 col-12 mb-30">
-                                                        <input id="new-pwd" placeholder="New Password" type="password">
-                                                    </div>
-
-                                                    <div class="col-lg-6 col-12 mb-30">
-                                                        <input id="confirm-pwd" placeholder="Confirm Password" type="password">
+                                                        <input id="dob" placeholder="DOB" type="date" value="{{Auth::user()->DOB}}" disabled>
                                                     </div>
 
                                                     <div class="col-12">
-                                                        <button class="save-change-btn">Save Changes</button>
+                                                        <button type="submit" class="save-change-btn">Save Changes</button>
+                                                    </div>
+
+                                                </div>
+                                            </form>
+                                            <form action="{{route('user.change-password')}}" method="post">
+                                                @csrf
+                                                <div class="row">
+                                                    <div class="col-12 mb-30"><h4>Password change</h4></div>
+
+                                                    <div class="col-12 mb-30">
+                                                        <input name="old_password" id="current-pwd" placeholder="Current Password" type="password">
+                                                    </div>
+
+                                                    <div class="col-lg-6 col-12 mb-30">
+                                                        <input name="password" id="new-pwd" placeholder="New Password" type="password">
+                                                    </div>
+
+                                                    <div class="col-lg-6 col-12 mb-30">
+                                                        <input name="password_confirmation" id="confirm-pwd" placeholder="Confirm Password" type="password">
+                                                    </div>
+
+                                                    <div class="col-12">
+                                                        <button class="save-change-btn">Proceed</button>
                                                     </div>
 
                                                 </div>
@@ -226,4 +206,19 @@
     </div>
 
     <!--=====  End of Cart page content  ======-->
+@endsection
+@section('script_contents')
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('table#orders').DataTable({
+                "order" : [[4,'desc']]
+            });
+        } );
+
+        $(document).ready(function() {
+            $('table#transactions').DataTable({
+                "order" : [[4,'desc']]
+            });
+        } );
+    </script>
 @endsection

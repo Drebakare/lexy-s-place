@@ -31,6 +31,8 @@
     <!-- Modernizer JS -->
     <script src="{{asset('_landing/assets/js/vendor/modernizr-2.8.3.min.js')}}"></script>
 
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css">
+
 
     <!-- Fav and Touch Icons -->
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
@@ -118,6 +120,11 @@
 
     <script src="{{asset('_landing/assets/js/paystackjs.js')}}"></script>
 
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js"></script>
+
+
+
 
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     <script type="text/javascript">
@@ -135,7 +142,7 @@
     </script>
     <script type="text/javascript">
         $( document ).ready(function() {
-            @if(!session()->has('age'))
+            @if(!Auth::check() && !session()->has('age'))
                 $('#click_me').click();
             @endif
         });
