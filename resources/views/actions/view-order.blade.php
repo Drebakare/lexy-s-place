@@ -44,9 +44,9 @@
 --}}
                                     <th class="pro-title">Reference</th>
                                     <th class="pro-title">Product</th>
-                                    <th class="pro-price">Price</th>
+                                    <th class="pro-price">Unit Price</th>
                                     <th class="pro-quantity">Quantity</th>
-                                    <th class="pro-subtotal">Total</th>
+                                    <th class="pro-subtotal">Total Price</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -114,7 +114,8 @@
                                     <h4>Order Summary</h4>
                                     <p>Sub Total <span>N {{number_format($get_order->total_price)}}</span></p>
                                     <p>Shipping Cost <span>N 00.00</span></p>
-                                    <p>Status <span>{{$get_order->status == 0 ? "Finished" : "Pending"}}</span></p>
+                                    <p>Payment Status <span>{{$get_order->status == 0 ? "Pending" : "Finished"}}</span></p>
+                                    <p>Order Status <span>{{$get_order->order_status == 0 ? "Pending" : "Finished"}}</span></p>
                                     <h2>Grand Total <span>N {{number_format($get_order->total_price)}}</span></h2>
                                 </div>
                             </div>

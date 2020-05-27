@@ -53,8 +53,9 @@ Route::get('/product/search', function () {
         'as' => 'logout',
         'uses' => 'Auth\AuthenticationController@Logout'
     ])->middleware('checkAuth');
-    Route::get('/user/change-password/{token}', [
-        'as' => 'user.change-password',
+
+    Route::get('/user/update-password/{token}', [
+        'as' => 'user.update-password',
         'uses' => 'Auth\AuthenticationController@changePassword'
     ]);
     Route::post('/user/final-change-password', [
@@ -170,7 +171,12 @@ Route::get('/product/search', function () {
         'uses' => 'User\DashboardController@updateProfile'
     ])->middleware('checkAuth');
 
-    Route::post('user/update-password', [
+    Route::post('user/change-password', [
         'as' => 'user.change-password',
         'uses' => 'User\DashboardController@changePassword'
+    ])->middleware('checkAuth');
+
+    Route::post('user/credit-wallet', [
+        'as' => 'user.credit-wallet',
+        'uses' => 'Payment\PaymentController@creditWallet'
     ])->middleware('checkAuth');

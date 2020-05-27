@@ -18,4 +18,9 @@ class Transaction extends Model
         $transactions = Transaction::where('user_id', Auth::user()->id)->get();
         return $transactions;
     }
+
+    public static function getPaginatedUserTransactions(){
+        $transactions = Transaction::where('user_id', Auth::user()->id)->get();
+        return $transactions;
+    }
 }

@@ -888,17 +888,12 @@
                                     <td class="first-column">Membership</td>
                                     <td class="product-image-title">
                                         <a href="#" class="image"><img src="{{asset('_landing/assets/images/products/medal (1).png')}}" style="width: 50px!important; height: 50px!important;" class="img-fluid" alt="Compare Product"></a>
-                                        <a href="#" class="category">Silver</a>
+                                        <a href="#" class="category">Normal</a>
                                         <a href="#" class="title">Lorem Impsum Lorem Impsum</a>
                                     </td>
                                     <td class="product-image-title">
                                         <a href="#" class="image"><img src="{{asset('_landing/assets/images/products/medal (2).png')}}" style="width: 50px!important; height: 50px!important;" class="img-fluid" alt="Compare Product"></a>
-                                        <a href="#" class="category">Bronze</a>
-                                        <a href="#" class="title">Lorem Impsum Lorem Impsum</a>
-                                    </td>
-                                    <td class="product-image-title">
-                                        <a href="#" class="image"><img src="{{asset('_landing/assets/images/products/medal.png')}}" style="width: 50px!important; height: 50px!important;" class="img-fluid" alt="Compare Product"></a>
-                                        <a href="#" class="category">Gold</a>
+                                        <a href="#" class="category">King</a>
                                         <a href="#" class="title">Lorem Impsum Lorem Impsum</a>
                                     </td>
                                 </tr>
@@ -906,11 +901,14 @@
                                     <td class="first-column">Description</td>
                                     <td class="pro-desc"><p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Blanditiis veritatis culpa asperiores fugit omnis ducimus ullam facilis magnam quo vitae.</p></td>
                                     <td class="pro-desc"><p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quidem, ab assumenda. Sunt accusantium quae porro repellendus sed totam deserunt autem!</p></td>
-                                    <td class="pro-desc"><p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Illo, ad! Natus dolor voluptates, veniam provident vitae consequuntur adipisci expedita est!</p></td>
+                                </tr>
+                                <tr>
+                                    <td class="first-column">Discount</td>
+                                    <td class="pro-price">20% Off</td>
+                                    <td class="pro-price">30% Off</td>
                                 </tr>
                                 <tr>
                                     <td class="first-column">Karaoke</td>
-                                    <td class="pro-price"><i style="color: red" class="fa fa-remove"></i></td>
                                     <td class="pro-price"><i style="color: #80bb01" class="fa fa-check"></i></td>
                                     <td class="pro-price"><i style="color: #80bb01" class="fa fa-check"></i></td>
                                 </tr>
@@ -918,19 +916,11 @@
                                     <td class="first-column">King's Place</td>
                                     <td class="pro-price"><i style="color: red" class="fa fa-remove"></i></td>
                                     <td class="pro-price"><i style="color: #80bb01" class="fa fa-check"></i></td>
-                                    <td class="pro-price"><i style="color: #80bb01" class="fa fa-check"></i></td>
-                                </tr>
-                                <tr>
-                                    <td class="first-column">Extra Treat</td>
-                                    <td class="pro-price"><i style="color: red" class="fa fa-remove"></i></td>
-                                    <td class="pro-price"><i style="color: red" class="fa fa-remove"></i></td>
-                                    <td class="pro-price"><i style="color: #80bb01" class="fa fa-check"></i></td>
                                 </tr>
                                 <tr>
                                     <td class="first-column"></td>
-                                    <td class="pro-addtocart"><a href="#" class="add-to-cart" tabindex="0"><span>Proceed</span></a></td>
-                                    <td class="pro-addtocart"><a href="#" class="add-to-cart" tabindex="0"><span>Proceed</span></a></td>
-                                    <td class="pro-addtocart"><a href="#" class="add-to-cart" tabindex="0"><span>Proceed</span></a></td>
+                                    <td class="pro-addtocart"><a href="#" class="add-to-cart" tabindex="0"><span>Get Started</span></a></td>
+                                    <td class="pro-addtocart"><a href="#" class="add-to-cart" tabindex="0"><span>Get Started</span></a></td>
                                 </tr>
                                 {{--<tr>
                                     <td class="first-column">Delete</td>
@@ -965,9 +955,7 @@
                                 </tbody>
                             </table>
                         </div>
-
                     </form>
-
                 </div>
             </div>
         </div>

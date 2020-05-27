@@ -53,11 +53,10 @@
                                             <p>Sub Total <span>N {{number_format($total)}}</span></p>
                                             <p>Shipping Fee <span>N 00.00</span></p>
                                             <p style="font-size: x-small">
-                                              Tax  <span>Tax of N {{number_format($total * ($tax->tax/(100 + $tax->tax)))}} inclusive</span>
+                                              Tax  <span>VAT of N {{number_format($total * ($tax->tax/(100 + $tax->tax)))}} inclusive</span>
 
                                             </p>
                                             <h4>Grand Total <span>N {{number_format($total)}}</span></h4>
-
                                         </div>
 
                                     </div>

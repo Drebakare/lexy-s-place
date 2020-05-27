@@ -9,6 +9,6 @@
         <br/>
         Your registered email-id is {{$user['email']}} , Please click on the below link to change your password
         <br/>
-        <a href="{{route('user.change-password', ["token" => $user->token])}}">Change Password</a>
+        <a href="{{route('user.update-password', ["token" => $user->token])}}">Change Password</a>
     </body>
 </html>

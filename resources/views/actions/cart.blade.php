@@ -42,9 +42,9 @@
                                     <th class="pro-thumbnail">Image</th>
 --}}
                                     <th class="pro-title">Product</th>
-                                    <th class="pro-price">Price</th>
+                                    <th class="pro-price">Unit Price</th>
                                     <th class="pro-quantity">Quantity</th>
-                                    <th class="pro-subtotal">Total</th>
+                                    <th class="pro-subtotal">Total Price</th>
                                     <th class="pro-remove">Remove</th>
                                 </tr>
                                 </thead>
@@ -135,29 +135,6 @@
     <meta name="_token" content="{{ app('Illuminate\Encryption\Encrypter')->encrypt(csrf_token()) }}" />
 @endsection
 @section('script_contents')
-    {{--<script type="text/javascript">
-        $(window).on("load",function() {
-            $('.qty-btn').on('click', function (e) {
-                e.preventDefault();
-                var $button = $(this);
-                var oldValue = $button.parent().find('input#qty').val();
-                var token = $button.parent().find('input#token').val();
-                console.log(oldValue + token);
-                if ($button.hasClass('inc')) {
-                    var newVal = parseFloat(oldValue) + 1;
-                } else {
-                    // Don't allow decrementing below zero
-                    if (oldValue > 0) {
-                        var newVal = parseFloat(oldValue) - 1;
-                    } else {
-                        newVal = 0;
-                    }
-                }
-                $button.parent().find('input').val(newVal);
-            });
-
-        });
-    </script>--}}
     <script type="text/javascript">
         function increment_quantity(cart_id) {
             $("#input-quantity-"+cart_id). attr('disabled', true);

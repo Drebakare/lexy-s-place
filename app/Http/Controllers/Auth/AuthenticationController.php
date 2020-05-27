@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\CustomerDetail;
 use App\Http\Controllers\Controller;
+use App\Membership;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -24,14 +26,14 @@ class AuthenticationController extends Controller
         ]);
         try {
             $age = User::getDateOfBirth($request->dob); // get user's date of birth
-
             // check for age limit
             if ($age < 18){
                 return redirect()->back()->with('failure', 'Your age is below the age limit');
             }
             // save user details
-            $user = User::registerUser($request);
-
+            User::registerUser($request);
+            //create membership
+            CustomerDetail::createNewCustomer($request->email);
             //send welcome email to user
             $user = User::where('email', $request->email)->first(); // get user's details
 
@@ -213,6 +215,7 @@ class AuthenticationController extends Controller
                 }
                 else{
                     User::newUser($user->getEmail(), $user->getEmail(), $user->getName());
+                    CustomerDetail::createNewCustomer($user->getEmail());
                     if (Auth::attempt(['email' => $user->getEmail(), 'password' => $user->getEmail()])) {
                         return redirect(route('user.dashboard'))->with('success', 'Authentication Successful');
                     }

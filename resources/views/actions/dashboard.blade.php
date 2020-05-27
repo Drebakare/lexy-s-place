@@ -21,7 +21,6 @@
 
     <!--=====  End of breadcrumb area  ======-->
 
-
     <!--=============================================
     =            Cart page content         =
     =============================================-->
@@ -36,40 +35,88 @@
 
                         <!-- My Account Tab Menu Start -->
                         <div class="col-lg-3 col-12">
+                            <div class="card align-items-center">
+                                <div class="mt-25">
+                                    <img src="{{asset('_landing/assets/images/user.png')}}" class="card-img-top" style="height: 100px; width: 100px" alt="...">
+                                </div>
+                                <div class="card-body text-center">
+                                    <h5>{{Auth::user()->first_name. " " . Auth::user()->last_name}}</h5>
+                                    <h5>{{Auth::user()->email}}</h5>
+                                    <h5 style="color: #80bb01">N {{number_format($customer_details->credit_balance)}}</h5>
+                                    <i class="fa fa-id-badge"></i> {{$customer_details->membership->membership_name}}
+                                </div>
+                            </div>
                             <div class="myaccount-tab-menu nav" role="tablist">
-                                <a href="#dashboad" class="active" data-toggle="tab"><i class="fa fa-dashboard"></i>
-                                    Dashboard</a>
+                                {{--<a href="#dashboad" class="active" data-toggle="tab"><i class="fa fa-dashboard"></i>
+                                    Dashboard</a>--}}
 
-                                <a href="#orders" data-toggle="tab"><i class="fa fa-cart-arrow-down"></i> Orders</a>
+                                <a  class="active" href="#orders" data-toggle="tab"><i class="fa fa-cart-arrow-down"></i> Orders</a>
 
-                                <a href="#transactions" data-toggle="tab"><i class="fa fa-save"></i> Transactions</a>
+                                <a href="#transactions" data-toggle="tab"><i class="fa fa-exchange"></i> Transactions</a>
+
+                                <a href="#recharge" data-toggle="tab"><i class="fa fa-google-wallet"></i> Credit Wallet </a>
 
                                 <a href="#account-info" data-toggle="tab"><i class="fa fa-user"></i> Account Settings</a>
 
                                 <a href="{{route('logout')}}"><i class="fa fa-sign-out"></i> Logout</a>
                             </div>
                         </div>
-                        <!-- My Account Tab Menu End -->
 
-                        <!-- My Account Tab Content Start -->
                         <div class="col-lg-9 col-12">
                             <div class="tab-content" id="myaccountContent">
                                 <!-- Single Tab Content Start -->
-                                <div class="tab-pane fade show active" id="dashboad" role="tabpanel">
+                                {{--<div class="tab-pane fade show active" id="dashboad" role="tabpanel">
                                     <div class="myaccount-content">
                                         <h3>Dashboard</h3>
+                                        --}}{{--<div class="row">
+                                            <div class="col-md-4 col-lg-4 col-sm-6">
+                                                <div class="card">
+                                                    <div class="card-body">
+                                                        <div class="row align-items-center">
+                                                            <div class="col-md-10 col-sm-10">
+                                                                <h6 class="text-uppercase text-muted mb-2">Value</h6>
+                                                                <span class="h5 mb-0"> #24000</span>
+                                                                <span class="badge badge-success mt-n1">30%</span>
+                                                            </div>
+                                                            <div class="col-md-2 col-sm-2">
+                                                                <span class="h3 fa fa-dollar text-muted mb-0"></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>--}}{{--
+                                        <div class="row card" style="border-color: white!important; height: 200px!important;">
+                                                <div class="row card-body">
+                                                    <div class="col-md-4 text-center align-items-center col-sm-6">
+                                                        <h4>N 20,000</h4>
+                                                        <p style="font-size: small">Total Spent</p>
+                                                        <img src="{{asset('_landing/assets/images/sound.png')}}" style="width: 120px; height: 60px" />
+                                                    </div>
+                                                    <div class="col-md-4 text-center align-items-center col-sm-6">
+                                                        <h4>N 20,000</h4>
+                                                        <p style="font-size: small">Total Spent</p>
+                                                        <img src="{{asset('_landing/assets/images/shopping.png')}}" style="width: 60px; height: 60px" />
+                                                    </div>
+                                                    <div class="col-md-4 text-center align-items-center col-sm-6">
+                                                        <h4>N 20,000</h4>
+                                                        <p style="font-size: small">Total Spent</p>
+                                                        <img src="{{asset('_landing/assets/images/shopping.png')}}" style="width: 60px; height: 60px" />
+                                                    </div>
+                                                </div>
 
+                                        </div>
                                         <div class="welcome">
                                             <p>Hello, <strong>{{Auth::user()->last_name}}</strong>
                                         </div>
 
                                         <p class="mb-0">Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem IpsumLorem IpsumLorem Ipsum Lorem Ipsum Lorem Ipsum</p>
                                     </div>
-                                </div>
+                                </div>--}}
                                 <!-- Single Tab Content End -->
 
                                 <!-- Single Tab Content Start -->
-                                <div class="tab-pane fade" id="orders" role="tabpanel">
+                                <div class="tab-pane fade show active" id="orders" role="tabpanel">
                                     <div class="myaccount-content">
                                         <h3>Orders</h3>
 
@@ -80,7 +127,8 @@
                                                     <th>Receipt No</th>
                                                     <th>Price</th>
                                                     <th>Table Number</th>
-                                                    <th>Status</th>
+                                                    <th>Payment Status</th>
+                                                    <th>Order Status</th>
                                                     <th>Date</th>
                                                     {{--<th></th>--}}
                                                     <th>Action</th>
@@ -94,6 +142,7 @@
                                                         <td>{{$order->total_price}}</td>
                                                         <td> Table - {{$order->table_id}}</td>
                                                         <td>{{$order->status == 0 ? 'Pending' : "Finished"}}</td>
+                                                        <td>{{$order->order_status == 0 ? 'Pending' : "Finished"}}</td>
                                                         <td>{{Carbon\Carbon::parse($order->created_at)->format('d/m/Y')}}</td>
                                                         <td><a href="{{route('user.view-order', ['token' => $order->token])}}" class="btn">View</a></td>
                                                     </tr>
@@ -137,6 +186,73 @@
                                     </div>
                                 </div>
                                 <!-- Single Tab Content End -->
+
+                                <div class="tab-pane fade" id="recharge" role="tabpanel">
+                                    <div class="myaccount-content">
+                                        <h3>Credit History</h3>
+                                        <div class="row mt-5">
+                                            @foreach($credits as $credit)
+                                                @if($credit->transaction_type == 'Credit - Wallet')
+                                                    <div class="col-md-4 col-sm-4">
+                                                        <div class="wrimagecard wrimagecard-topimage">
+                                                            <a href="#credit-wallet" data-toggle="modal" {{--data-target="#birth-confirmation"--}}>
+                                                                <div class="wrimagecard-topimage_header" style="background-color: rgba(22, 160, 133, 0.1)">
+                                                                   <span style="font-size: large"> N {{number_format($credit->amount)}}</span><center><i class="fa fa-credit-card" style="color:#BB7824"> </i></center>
+                                                                </div>
+                                                                <div class="wrimagecard-topimage_title" >
+                                                                    <h4>
+                                                                        <span style="font-size: small">{{$credit->transaction_no}}
+                                                                            @if($credit->transaction_status == 0)
+                                                                                <i class="fa fa-times" style="color:red; font-size: 20px !important;"></i>
+                                                                            @else
+                                                                                <i class="fa fa-check" style="color:#80bb01; font-size: 20px!important;"></i>
+                                                                            @endif
+                                                                        </span>
+                                                                        <div class="pull-right badge" id="WrForms"></div>
+                                                                    </h4>
+                                                                </div>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                @endif
+                                            @endforeach
+                                            <div class="col-md-4 col-sm-4">
+                                                <div class="wrimagecard wrimagecard-topimage">
+                                                    <a href="#credit-wallet" data-toggle="modal" {{--data-target="#birth-confirmation"--}}>
+                                                        <div class="wrimagecard-topimage_header" style="background-color:  rgba(213, 15, 37, 0.1)">
+                                                            <center><i class="fa fa-plus" style="color:#80bb01"> </i></center>
+                                                        </div>
+                                                        <div class="wrimagecard-topimage_title" >
+                                                            <h4> New Credit
+                                                                <div class="pull-right badge" id="WrForms"></div>
+                                                            </h4>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                       {{-- @if(count($credits) > 5)
+                                            <div class="pagination-container mt-4">
+                                                <div class="container">
+                                                    <div class="row">
+                                                        <div class="col-lg-12">
+                                                            <!--=======  pagination-content  =======-->
+                                                            <div class="text-center">
+                                                                <div class="offset-md-5 offset-4">
+                                                                    <ul>
+                                                                        <li>
+                                                                            {{$credits->links()}}
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endif--}}
+                                    </div>
+                                </div>
 
                                 <!-- Single Tab Content Start -->
                                 <div class="tab-pane fade" id="account-info" role="tabpanel">
@@ -200,6 +316,38 @@
                         <!-- My Account Tab Content End -->
                     </div>
 
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="credit-wallet" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="text-center">
+                        <div class="logo mt-20 mb-10">
+                            <h5 style="color: #80bb01">Credit Wallet</h5>
+                        </div>
+                        <h5> Kindly Provide the Detail Below</h5>
+                        <div class="col-sm-12 col-md-12 col-xs-12 col-lg-12 mb-20">
+                            <form action="{{route('user.credit-wallet')}}" method="post">
+                                @csrf
+                                <div class="login-form">
+                                    <h6>Enter Transaction Details Below</h6>
+                                    <div class="row">
+                                        <div class="col-md-12 col-12 mb-20">
+                                            <label>Amount</label>
+                                            <input name="amount" class="mb-0" type="number" placeholder="Credit Amount" required>
+                                        </div>
+                                        <div class="col-6 offset-md-3 offset-sm-2 offset-xs-2">
+                                            <button type="submit" class="register-button mt-0">Proceed</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <h6>This site uses cookies and by entering, you acknowledge that you have read our privace and cookie notice</h6>
+                    </div>
                 </div>
             </div>
         </div>

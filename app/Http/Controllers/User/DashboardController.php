@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\User;
 
+use App\CustomerDetail;
 use App\Http\Controllers\Controller;
 use App\Order;
 use App\OrderSummary;
@@ -16,7 +17,9 @@ class DashboardController extends Controller
     public function Dashboard(){
         $orders = Order::getUserOrders();
         $transactions = Transaction::getUserTransactions();
-        return view('actions.dashboard', compact('orders', 'transactions'));
+        $customer_details = CustomerDetail::getUserDetails();
+        $credits = Transaction::getPaginatedUserTransactions();
+        return view('actions.dashboard', compact('orders', 'transactions', 'customer_details', 'credits'));
     }
 
     public function viewOrder($token){
