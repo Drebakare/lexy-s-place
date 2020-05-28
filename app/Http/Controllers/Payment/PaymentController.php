@@ -18,73 +18,140 @@ class PaymentController extends Controller
     public function makePayment(Request $request)
     {
         try{
-            $create_order = new order();
-            $create_order->user_id = Auth::user()->id;
-            $create_order->receipt_no = Str::random(15);
-            $create_order->total_price = Order::calculateTotalOrderPrice();
-            if(session()->get('voucher_id')){
-                $create_order->voucher_id = 0;
+            if ($request->payment_submission == 'online'){
+                $create_order = new order();
+                $create_order->user_id = Auth::user()->id;
+                $create_order->receipt_no = Str::random(15);
+                $create_order->total_price = Order::calculateTotalOrderPrice();
+                $create_order->total_paid = $request->amount;
+                if(session()->get('voucher_id')){
+                    $create_order->voucher_id = 0;
+                }
+                $create_order->membership_id = 1;
+                $create_order->token = Str::random(15);
+                $create_order->table_id = $request->table;
+                $create_order->save();
+                // create order summaries
+                foreach (session()->get('cart') as $product){
+                    $create_order_summaries = new OrderSummary();
+                    $get_product = Product::getProduct($product['token']);
+                    $create_order_summaries->order_id = $create_order->id;
+                    $create_order_summaries->product_id = $get_product->id;
+                    $create_order_summaries->qty = $product['quantity'];
+                    $create_order_summaries->price = $get_product->price;
+                    $create_order_summaries->sub_total = $product['quantity'] * $get_product->price;
+                    $create_order_summaries->token = Str::random(15);
+                    $create_order_summaries->save();
+                }
+
+                $curl = curl_init();
+                $email = Auth::user()->email;
+                $amount = $request->amount * 100;  //the amount in kobo. This value is actually NGN 300
+
+                curl_setopt_array($curl, array(
+                    CURLOPT_URL => "https://api.paystack.co/transaction/initialize",
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_CUSTOMREQUEST => "POST",
+                    CURLOPT_POSTFIELDS => json_encode([
+                        'amount'=>$amount,
+                        'email'=>$email,
+                    ]),
+                    CURLOPT_HTTPHEADER => [
+                        "authorization: Bearer sk_test_c73dcf5db9c50537e01dd4cb133f7b1b2a2bd181", //replace this with your own test key
+                        "content-type: application/json",
+                        "cache-control: no-cache"
+                    ],
+                ));
+
+                $response = curl_exec($curl);
+                $err = curl_error($curl);
+
+                if($err){
+                    // there was an error contacting the Paystack API
+                    return redirect()->back()->with('failure', "Payment Could not be Process, Kindly Try Again");
+                }
+
+                $tranx = json_decode($response, true);
+
+                if(!$tranx["status"]){
+                    return redirect()->back()->with('failure', "Payment Could not be Process, Kindly Try Again");
+                    /*                print_r('API returned error: ' . $tranx['message']);*/
+                }
+                $transaction_summary = [
+                    'reference_id' => $create_order->receipt_no,
+                    'amount' => $request->amount,
+                    'type' => 'order',
+                ];
+                session()->put('transaction_summary',$transaction_summary);
+                return redirect( $tranx['data']['authorization_url']);
             }
-            $create_order->membership_id = 1;
-            $create_order->token = Str::random(15);
-            $create_order->table_id = $request->table;
-            $create_order->save();
-            // create order summaries
-            foreach (session()->get('cart') as $product){
-                $create_order_summaries = new OrderSummary();
-                $get_product = Product::getProduct($product['token']);
-                $create_order_summaries->order_id = $create_order->id;
-                $create_order_summaries->product_id = $get_product->id;
-                $create_order_summaries->qty = $product['quantity'];
-                $create_order_summaries->price = $get_product->price;
-                $create_order_summaries->sub_total = $product['quantity'] * $get_product->price;
-                $create_order_summaries->token = Str::random(15);
-                $create_order_summaries->save();
+            elseif ($request->payment_submission == 'wallet'){
+                $confirm_balance = CustomerDetail::checkBalance();
+                if ($confirm_balance->credit_balance >=  $request->amount){
+                    $create_order = new order();
+                    $create_order->user_id = Auth::user()->id;
+                    $create_order->receipt_no = Str::random(15);
+                    $create_order->total_price = Order::calculateTotalOrderPrice();
+                    $create_order->total_paid = $request->amount;
+                    if(session()->get('voucher_id')){
+                        $create_order->voucher_id = 0;
+                    }
+                    $create_order->membership_id = 1;
+                    $create_order->token = Str::random(15);
+                    $create_order->table_id = $request->table;
+                    $create_order->save();
+
+                    // create order summaries
+                    foreach (session()->get('cart') as $product){
+                        $create_order_summaries = new OrderSummary();
+                        $get_product = Product::getProduct($product['token']);
+                        $create_order_summaries->order_id = $create_order->id;
+                        $create_order_summaries->product_id = $get_product->id;
+                        $create_order_summaries->qty = $product['quantity'];
+                        $create_order_summaries->price = $get_product->price;
+                        $create_order_summaries->sub_total = $product['quantity'] * $get_product->price;
+                        $create_order_summaries->token = Str::random(15);
+                        $create_order_summaries->save();
+                    }
+                    // deduct money from the wallet
+                    $status = CustomerDetail::DeductMoney($request->amount);
+                    if ($status){
+                        $update_order = Order::where('token',$create_order->token)->update([
+                            'status' => 1
+                        ]);
+                        if ($update_order){
+                            if (session()->get('cart')){
+                                session()->forget('cart');
+                            }
+                            // create transaction
+                            $transaction = new Transaction();
+                            $transaction->user_id = Auth::user()->id;
+                            $transaction->amount = $request->amount;
+                            $transaction->transaction_no = $create_order->receipt_no;
+                            $transaction->transaction_type = 'Wallet- Debit - Order';
+                            $transaction->transaction_status = 1;
+                            $transaction->token = Str::random(15);
+                            $transaction->save();
+                            $order = Order::where('token', $create_order->token)->first();
+
+                            return view('actions.success_page', compact('order'));
+                        }
+                        else{
+                            return view('actions.failure_page')->with('failure', 'Was not Succcessfull');
+                        }
+                    }
+                }
+                else{
+                    return redirect()->back()->with('failure', "Insufficient Balance, Kindly Credit You Wallet and Try Again");
+                }
+            }
+            else{
+                return redirect()->back()->with('failure', 'Kindly Select the right payment method to use');
             }
 
-            $curl = curl_init();
-            $email = Auth::user()->email;
-            $amount = $request->amount * 100;  //the amount in kobo. This value is actually NGN 300
-
-            curl_setopt_array($curl, array(
-                CURLOPT_URL => "https://api.paystack.co/transaction/initialize",
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_CUSTOMREQUEST => "POST",
-                CURLOPT_POSTFIELDS => json_encode([
-                    'amount'=>$amount,
-                    'email'=>$email,
-                ]),
-                CURLOPT_HTTPHEADER => [
-                    "authorization: Bearer sk_test_c73dcf5db9c50537e01dd4cb133f7b1b2a2bd181", //replace this with your own test key
-                    "content-type: application/json",
-                    "cache-control: no-cache"
-                ],
-            ));
-
-            $response = curl_exec($curl);
-            $err = curl_error($curl);
-
-            if($err){
-                // there was an error contacting the Paystack API
-                return redirect()->back()->with('failure', "Payment Could not be Process, Kindly Try Again");
-            }
-
-            $tranx = json_decode($response, true);
-
-            if(!$tranx["status"]){
-                return redirect()->back()->with('failure', "Payment Could not be Process, Kindly Try Again");
-/*                print_r('API returned error: ' . $tranx['message']);*/
-            }
-            $transaction_summary = [
-                'reference_id' => $create_order->receipt_no,
-                'amount' => $request->amount,
-                'type' => 'order',
-            ];
-            session()->put('transaction_summary',$transaction_summary);
-            return redirect( $tranx['data']['authorization_url']);
         }
         catch (\Exception $exception){
-            return redirect()->back()->with('failure', $exception->getMessage());
+            return redirect()->back()->with('failure', 'payment could not be made, kindly try again');
         }
     }
 
@@ -197,7 +264,7 @@ class PaymentController extends Controller
                     $transaction->user_id = Auth::user()->id;
                     $transaction->amount = $transaction_data['amount'];
                     $transaction->transaction_no = $transaction_data['reference_id'];
-                    $transaction->transaction_type = 'Debit - Order';
+                    $transaction->transaction_type = 'Online - Debit - Order';
                     $transaction->transaction_status = 1;
                     $transaction->token = Str::random(15);
                     $transaction->save();
@@ -255,10 +322,10 @@ class PaymentController extends Controller
                 }
 
             }
-
         }
         catch (\Exception $exception){
-            dd($exception);
+            session()->forget('transaction_summary');
+            return view('actions.failure_page')->with('failure', 'Was not Succcessfull');
         }
     }
 }

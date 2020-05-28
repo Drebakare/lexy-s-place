@@ -34,4 +34,22 @@ class CustomerDetail extends Model
     public static function getUserDetails(){
         return CustomerDetail::where('user_id', Auth::user()->id)->first();
     }
+
+    public static function checkBalance(){
+        $user_balance = CustomerDetail::where('user_id', Auth::user()->id)->first();
+        return $user_balance;
+    }
+
+    public static function deductMoney($amount){
+        $user_details = CustomerDetail::where('user_id', Auth::user()->id)->first();
+        $update_balance = CustomerDetail::where('user_id', Auth::user()->id)->update([
+            'credit_balance' => $user_details->credit_balance - $amount
+        ]);
+        if ($update_balance){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
 }

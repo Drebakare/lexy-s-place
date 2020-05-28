@@ -51,12 +51,13 @@
 
 
                                             <p>Sub Total <span>N {{number_format($total)}}</span></p>
+                                            <p>Membership Discount <span>- {{$membership_discount}} %</span></p>
                                             <p>Shipping Fee <span>N 00.00</span></p>
                                             <p style="font-size: x-small">
                                               Tax  <span>VAT of N {{number_format($total * ($tax->tax/(100 + $tax->tax)))}} inclusive</span>
 
                                             </p>
-                                            <h4>Grand Total <span>N {{number_format($total)}}</span></h4>
+                                            <h4>Grand Total <span>N {{number_format($discount)}}</span></h4>
                                         </div>
 
                                     </div>
@@ -69,7 +70,7 @@
                                     <h4 class="checkout-title">Sitting Location</h4>
 
                                     <div class="row">
-                                        <div class="col-md-6">
+                                        <div class="col-md-12">
                                             <label>Table*</label>
                                             <select name="table" id="table-number" class="nice-select">
                                                 <option value="1">1</option>
@@ -79,9 +80,12 @@
                                                 <option value="5">5</option>
                                             </select>
                                         </div>
-                                        <input value="{{$total}}" name="amount" hidden>
+                                        <input value="{{$discount}}" name="amount" hidden>
                                         <div class="col-md-6 mt-md-4" >
-                                            <button type="submit"  class="place-order" style="width: 100% !important; height: 45px !important; background-color: #80bb01 !important;"> Make Payment Online</button>
+                                            <button type="submit" name="payment_submission" value="online" class="place-order" style="width: 100% !important; height: 45px !important; background-color: #80bb01 !important;"> Make Payment Online</button>
+                                        </div>
+                                        <div class="col-md-6 mt-md-4" >
+                                            <button type="submit" name="payment_submission" value="wallet"  class="place-order" style="width: 100% !important; height: 45px !important; background-color: #008459 !important;">Pay With Wallet</button>
                                         </div>
                                     </div>
                                 </div>

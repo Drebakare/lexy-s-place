@@ -56,6 +56,8 @@
 
                                 <a href="#recharge" data-toggle="tab"><i class="fa fa-google-wallet"></i> Credit Wallet </a>
 
+                                <a href="#bookings" data-toggle="tab"><i class="fa fa-ticket"></i> Bookings</a>
+
                                 <a href="#account-info" data-toggle="tab"><i class="fa fa-user"></i> Account Settings</a>
 
                                 <a href="{{route('logout')}}"><i class="fa fa-sign-out"></i> Logout</a>
@@ -126,6 +128,7 @@
                                                 <tr>
                                                     <th>Receipt No</th>
                                                     <th>Price</th>
+                                                    <th>Total Paid</th>
                                                     <th>Table Number</th>
                                                     <th>Payment Status</th>
                                                     <th>Order Status</th>
@@ -140,10 +143,11 @@
                                                     <tr>
                                                         <td>{{$order->receipt_no}}</td>
                                                         <td>{{$order->total_price}}</td>
+                                                        <td>{{$order->total_paid}}</td>
                                                         <td> Table - {{$order->table_id}}</td>
                                                         <td>{{$order->status == 0 ? 'Pending' : "Finished"}}</td>
                                                         <td>{{$order->order_status == 0 ? 'Pending' : "Finished"}}</td>
-                                                        <td>{{Carbon\Carbon::parse($order->created_at)->format('d/m/Y')}}</td>
+                                                        <td>{{/*Carbon\Carbon::parse(*/$order->created_at/*)->format('d/m/Y')*/}}</td>
                                                         <td><a href="{{route('user.view-order', ['token' => $order->token])}}" class="btn">View</a></td>
                                                     </tr>
                                                 @endforeach
@@ -177,7 +181,7 @@
                                                         <td>{{$transaction->transaction_type}}</td>
                                                         <td>{{$transaction->amount}}</td>
                                                         <td>{{$transaction->transaction_status == 0 ? "Pending" : "Finished"}}</td>
-                                                        <td>{{Carbon\Carbon::parse($transaction->created_at)->format('d/m/Y')}}</td>
+                                                        <td>{{/*Carbon\Carbon::parse(*/$transaction->created_at/*)->format('d/m/Y')*/}}</td>
                                                     </tr>
                                                 @endforeach
                                                 </tbody>
@@ -254,6 +258,38 @@
                                     </div>
                                 </div>
 
+                                <!-- Single Tab Content Start -->
+                                <div class="tab-pane fade" id="bookings" role="tabpanel">
+                                    <div class="myaccount-content">
+                                        <h3>My Bookings</h3>
+                                        <div class="myaccount-table table-responsive text-center">
+                                            <table id="transactions" class="table table-bordered">
+                                                <thead class="thead-light">
+                                                <tr>
+                                                    <th>Receipt Number</th>
+                                                    <th>Period</th>
+                                                    <th>Status</th>
+                                                    <th>Token</th>
+                                                    <th>Date</th>
+                                                </tr>
+                                                </thead>
+
+                                                <tbody>
+                                                @foreach($transactions as $transaction)
+                                                    <tr>
+                                                        <td>{{$transaction->transaction_no}}</td>
+                                                        <td>{{$transaction->transaction_type}}</td>
+                                                        <td>{{$transaction->amount}}</td>
+                                                        <td>{{$transaction->transaction_status == 0 ? "Pending" : "Finished"}}</td>
+                                                        <td>{{/*Carbon\Carbon::parse(*/$transaction->created_at/*)->format('d/m/Y')*/}}</td>
+                                                    </tr>
+                                                @endforeach
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Single Tab Content End -->
                                 <!-- Single Tab Content Start -->
                                 <div class="tab-pane fade" id="account-info" role="tabpanel">
                                     <div class="myaccount-content">
