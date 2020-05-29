@@ -182,7 +182,6 @@ Route::get('/product/search', function () {
     ])->middleware('checkAuth');
 
     // Room Bookings
-
     Route::get('user/book-room', [
         'as' => 'user.book-room',
         'uses' => 'Booking\BookingController@bookRoom'
@@ -191,4 +190,10 @@ Route::get('/product/search', function () {
     Route::post('user/final-bookings', [
         'as' => 'user.final-bookings',
         'uses' => 'Booking\BookingController@finalBookings'
+    ])->middleware('checkAuth');
+
+    // Upgrade User
+    Route::get('user/upgrade-membership', [
+        'as' => 'user.upgrade-membership',
+        'uses' => 'User\MembershipController@upgradeMembership'
     ])->middleware('checkAuth');

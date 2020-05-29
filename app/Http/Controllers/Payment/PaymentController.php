@@ -316,6 +316,12 @@ class PaymentController extends Controller
                     $update_wallet->credit_balance = $update_wallet->credit_balance + $transaction_data['amount'];
                     $update_wallet->save();
 
+                    if ($transaction_data['membership_upgrade']){
+                        $customer_details = CustomerDetail::where('user_id', Auth::user()->id)->first();
+                        $customer_details->membership_id = $transaction_data['membership_upgrade'];
+                        $customer_details->save();
+                    }
+
                     session()->forget('transaction_summary');
                     $wallet = Transaction::where('token', $receipt)->first();
                     return view('actions.payment_success_page', compact('wallet'));

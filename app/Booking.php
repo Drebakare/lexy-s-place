@@ -4,6 +4,7 @@ namespace App;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class Booking extends Model
 {
@@ -22,5 +23,9 @@ class Booking extends Model
         $status = Booking::where(['period_id' => $period->id, 'booking_status' => 0])
                             ->whereDate('created_at', Carbon::today())->first();
         return $status;
+    }
+
+    public static function getBookings(){
+        return Booking::where('user_id', Auth::user()->id)->get();
     }
 }

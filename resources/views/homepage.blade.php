@@ -919,8 +919,8 @@
                                 </tr>
                                 <tr>
                                     <td class="first-column"></td>
-                                    <td class="pro-addtocart"><a href="#" class="add-to-cart" tabindex="0"><span>Get Started</span></a></td>
-                                    <td class="pro-addtocart"><a href="#" class="add-to-cart" tabindex="0"><span>Get Started</span></a></td>
+                                    <td class="pro-addtocart"><a href="{{route('registration')}}" class="add-to-cart" tabindex="0"><span>Get Started</span></a></td>
+                                    <td class="pro-addtocart"><a href="{{route('user.upgrade-membership')}}" class="add-to-cart" tabindex="0"><span>Get Started</span></a></td>
                                 </tr>
                                 {{--<tr>
                                     <td class="first-column">Delete</td>

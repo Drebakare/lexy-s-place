@@ -42,10 +42,10 @@
                             <div class="row">
                                 <div class="col-md-12 col-12 mb-20">
                                     <label>Choose Available Room and Period</label>
-                                    <select name="Period" id="table-number" class=" js-example-basic-single" style="width: 100%; min-height: 40px !important; " required>
-                                        <option>Choose Period</option>
+                                    <select name="period" id="table-number" class=" js-example-basic-single" style="width: 100%; min-height: 40px !important; " required>
+                                        <option value=""> Select A Period</option>
                                         @foreach($periods as $period)
-                                            <option value="{{$period->id}}">{{$period->room->room_name}} - ( {{$period->period}} ) ( N {{number_format($period->price)}} ) </option>
+                                            <option value="@if($membership_id == 1 && $period->room_id == 2) @else{{$period->id}}@endif" @if($membership_id == 1 && $period->room_id == 2) disabled @endif>{{$period->room->room_name}} - ( {{$period->period}} ) ( N {{number_format($period->price)}} ) @if($membership_id == 1 && $period->room_id == 2) not Eligible @endif </option>
                                         @endforeach
                                     </select>
                                 </div>

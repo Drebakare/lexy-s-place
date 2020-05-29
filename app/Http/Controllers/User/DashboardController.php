@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\User;
 
+use App\Booking;
 use App\CustomerDetail;
 use App\Http\Controllers\Controller;
 use App\Order;
@@ -19,7 +20,8 @@ class DashboardController extends Controller
         $transactions = Transaction::getUserTransactions();
         $customer_details = CustomerDetail::getUserDetails();
         $credits = Transaction::getPaginatedUserTransactions();
-        return view('actions.dashboard', compact('orders', 'transactions', 'customer_details', 'credits'));
+        $bookings = Booking::getBookings();
+        return view('actions.dashboard', compact('orders', 'transactions', 'customer_details', 'credits', 'bookings'));
     }
 
     public function viewOrder($token){

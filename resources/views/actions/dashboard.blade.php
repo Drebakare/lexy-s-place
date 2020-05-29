@@ -275,12 +275,12 @@
                                                 </thead>
 
                                                 <tbody>
-                                                @foreach($transactions as $transaction)
+                                                @foreach($bookings as $booking)
                                                     <tr>
-                                                        <td>{{$transaction->transaction_no}}</td>
-                                                        <td>{{$transaction->transaction_type}}</td>
-                                                        <td>{{$transaction->amount}}</td>
-                                                        <td>{{$transaction->transaction_status == 0 ? "Pending" : "Finished"}}</td>
+                                                        <td>{{$booking->receipt_no}}</td>
+                                                        <td>{{$booking->period->period}}</td>
+                                                        <td>{{$booking->booking_status == 0 ? "Pending" : "Finished"}}</td>
+                                                        <td>{{$booking->token}}</td>
                                                         <td>{{/*Carbon\Carbon::parse(*/$transaction->created_at/*)->format('d/m/Y')*/}}</td>
                                                     </tr>
                                                 @endforeach
@@ -401,6 +401,12 @@
 
         $(document).ready(function() {
             $('table#transactions').DataTable({
+                "order" : [[4,'desc']]
+            });
+        } );
+
+        $(document).ready(function() {
+            $('table#bookings').DataTable({
                 "order" : [[4,'desc']]
             });
         } );
