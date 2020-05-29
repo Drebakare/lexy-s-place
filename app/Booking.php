@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Booking extends Model
@@ -15,5 +16,11 @@ class Booking extends Model
     }
     public function period(){
         return $this->belongsTo(Period::class);
+    }
+
+    public static function confirmAvailability($period){
+        $status = Booking::where(['period_id' => $period->id, 'booking_status' => 0])
+                            ->whereDate('created_at', Carbon::today())->first();
+        return $status;
     }
 }

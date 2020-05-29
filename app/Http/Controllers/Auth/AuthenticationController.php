@@ -45,7 +45,14 @@ class AuthenticationController extends Controller
                 // check role for redirection
                 switch ($role){
                     case 1:
-                        return redirect(route('user.dashboard'))->with('success', 'Login Successful');
+                        if (session()->get('intended_url')){
+                            return redirect(route(session()->get('intended_url')))->with('success', 'Login Successful');
+                            break;
+                        }
+                        else{
+                            return redirect(route('user.dashboard'))->with('success', 'Login Successful');
+                            break;
+                        }
                         break;
                     default:
                         return redirect(route('user.dashboard'))->with('success', 'Login Successful');
@@ -207,7 +214,14 @@ class AuthenticationController extends Controller
                     // check role for redirection
                     switch ($role){
                         case 1:
-                            return redirect(route('user.dashboard'))->with('success', 'Login Successful');
+                            if (session()->get('intended_url')){
+                                return redirect(route(session()->get('intended_url')))->with('success', 'Login Successful');
+                                break;
+                            }
+                            else{
+                                return redirect(route('user.dashboard'))->with('success', 'Login Successful');
+                                break;
+                            }
                             break;
                         default:
                             return redirect(route('user.dashboard'))->with('success', 'Login Successful');
@@ -231,7 +245,6 @@ class AuthenticationController extends Controller
         catch (\Exception $exception){
             return redirect()->back()->with('failure', $exception->getMessage());
         }
-
         // $user->token;
     }
 }

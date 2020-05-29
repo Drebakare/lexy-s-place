@@ -180,3 +180,15 @@ Route::get('/product/search', function () {
         'as' => 'user.credit-wallet',
         'uses' => 'Payment\PaymentController@creditWallet'
     ])->middleware('checkAuth');
+
+    // Room Bookings
+
+    Route::get('user/book-room', [
+        'as' => 'user.book-room',
+        'uses' => 'Booking\BookingController@bookRoom'
+    ])->middleware('checkAuth');
+
+    Route::post('user/final-bookings', [
+        'as' => 'user.final-bookings',
+        'uses' => 'Booking\BookingController@finalBookings'
+    ])->middleware('checkAuth');

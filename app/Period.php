@@ -16,4 +16,8 @@ class Period extends Model
     public function room(){
         return $this->belongsTo(Room::class);
     }
+
+    public static function getPeriods(){
+        return Period::get();
+    }
 }
