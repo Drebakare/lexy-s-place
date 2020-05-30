@@ -20,7 +20,7 @@ class Transaction extends Model
     }
 
     public static function getPaginatedUserTransactions(){
-        $transactions = Transaction::where('user_id', Auth::user()->id)->get();
+        $transactions = Transaction::where('user_id', Auth::user()->id)->paginate(6);
         return $transactions;
     }
 }

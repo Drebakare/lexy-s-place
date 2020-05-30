@@ -62,7 +62,7 @@
                                             <div class="pro-qty">
                                                 <input {{--onblur="update_quantity('{{$product["token"]}}', {{$product["quantity"]}})"--}} id="input-quantity-3" type="number" value="{{$summary->qty}}" disabled>
                                             </div></td>
-                                        <td class="pro-subtotal"><span>{{$summary->sub_total }}</span></td>
+                                        <td class="pro-subtotal"><span>{{$summary->sub_total}}</span></td>
 {{--
                                         <td class="pro-remove"><a href="#" onclick="remove_product('{{$product['token']}}')"><i class="fa fa-trash-o"></i></a></td>
 --}}
@@ -116,7 +116,8 @@
                                     <p>Shipping Cost <span>N 00.00</span></p>
                                     <p>Payment Status <span>{{$get_order->status == 0 ? "Pending" : "Finished"}}</span></p>
                                     <p>Order Status <span>{{$get_order->order_status == 0 ? "Pending" : "Finished"}}</span></p>
-                                    <h2>Grand Total <span>N {{number_format($get_order->total_price)}}</span></h2>
+                                    <h2>Total Price <span>N {{number_format($get_order->total_price)}}</span></h2>
+                                    <h2>Total Paid <span>N {{number_format($get_order->total_paid)}}</span></h2>
                                 </div>
                             </div>
 

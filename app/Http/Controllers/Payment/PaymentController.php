@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Payment;
 
 use App\CustomerDetail;
 use App\Http\Controllers\Controller;
+use App\Http\paymentMethod;
 use App\Order;
 use App\OrderSummary;
 use App\Product;
@@ -43,47 +44,25 @@ class PaymentController extends Controller
                     $create_order_summaries->token = Str::random(15);
                     $create_order_summaries->save();
                 }
-
-                $curl = curl_init();
-                $email = Auth::user()->email;
-                $amount = $request->amount * 100;  //the amount in kobo. This value is actually NGN 300
-
-                curl_setopt_array($curl, array(
-                    CURLOPT_URL => "https://api.paystack.co/transaction/initialize",
-                    CURLOPT_RETURNTRANSFER => true,
-                    CURLOPT_CUSTOMREQUEST => "POST",
-                    CURLOPT_POSTFIELDS => json_encode([
-                        'amount'=>$amount,
-                        'email'=>$email,
-                    ]),
-                    CURLOPT_HTTPHEADER => [
-                        "authorization: Bearer sk_test_c73dcf5db9c50537e01dd4cb133f7b1b2a2bd181", //replace this with your own test key
-                        "content-type: application/json",
-                        "cache-control: no-cache"
-                    ],
-                ));
-
-                $response = curl_exec($curl);
-                $err = curl_error($curl);
-
-                if($err){
-                    // there was an error contacting the Paystack API
+                $result = paymentMethod::processPayment($request);
+                if($result[0]){
                     return redirect()->back()->with('failure', "Payment Could not be Process, Kindly Try Again");
                 }
 
-                $tranx = json_decode($response, true);
+                $tranx = json_decode($result[1], true);
 
                 if(!$tranx["status"]){
                     return redirect()->back()->with('failure', "Payment Could not be Process, Kindly Try Again");
-                    /*                print_r('API returned error: ' . $tranx['message']);*/
                 }
+
                 $transaction_summary = [
-                    'reference_id' => $create_order->receipt_no,
+                    'reference_id' => $create_order->receipt_no ,
                     'amount' => $request->amount,
                     'type' => 'order',
                 ];
                 session()->put('transaction_summary',$transaction_summary);
-                return redirect( $tranx['data']['authorization_url']);
+
+                return redirect($tranx['data']['authorization_url']);
             }
             elseif ($request->payment_submission == 'wallet'){
                 $confirm_balance = CustomerDetail::checkBalance();
@@ -166,47 +145,25 @@ class PaymentController extends Controller
             $transaction->token = Str::random(15);
             $transaction->save();
 
-            $curl = curl_init();
-            $email = Auth::user()->email;
-            $amount = $request->amount * 100;  //the amount in kobo. This value is actually NGN 300
-
-            curl_setopt_array($curl, array(
-                CURLOPT_URL => "https://api.paystack.co/transaction/initialize",
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_CUSTOMREQUEST => "POST",
-                CURLOPT_POSTFIELDS => json_encode([
-                    'amount'=>$amount,
-                    'email'=>$email,
-                ]),
-                CURLOPT_HTTPHEADER => [
-                    "authorization: Bearer sk_test_c73dcf5db9c50537e01dd4cb133f7b1b2a2bd181", //replace this with your own test key
-                    "content-type: application/json",
-                    "cache-control: no-cache"
-                ],
-            ));
-
-            $response = curl_exec($curl);
-            $err = curl_error($curl);
-
-            if($err){
-                // there was an error contacting the Paystack API
+            $result = paymentMethod::processPayment($request);
+            if($result[0]){
                 return redirect()->back()->with('failure', "Payment Could not be Process, Kindly Try Again");
             }
 
-            $tranx = json_decode($response, true);
+            $tranx = json_decode($result[1], true);
 
             if(!$tranx["status"]){
                 return redirect()->back()->with('failure', "Payment Could not be Process, Kindly Try Again");
-                /*                print_r('API returned error: ' . $tranx['message']);*/
             }
+
             $transaction_summary = [
                 'reference_id' => $transaction->token,
                 'amount' => $request->amount,
                 'type' => 'credit',
             ];
             session()->put('transaction_summary',$transaction_summary);
-            return redirect( $tranx['data']['authorization_url']);
 
+            return redirect($tranx['data']['authorization_url']);
         }
         catch (\Exception $exception){
             return redirect()->back()->with('failure', 'Payment could not be processed');
@@ -223,18 +180,9 @@ class PaymentController extends Controller
                     session()->forget('transaction_summary');
                     return view('actions.failure_page')->with('failure', 'Could not be Confirmed.');
                 }
-                curl_setopt_array($curl, array(
-                    CURLOPT_URL => "https://api.paystack.co/transaction/verify/" . rawurlencode($reference),
-                    CURLOPT_RETURNTRANSFER => true,
-                    CURLOPT_HTTPHEADER => [
-                        "accept: application/json",
-                        "authorization: Bearer sk_test_c73dcf5db9c50537e01dd4cb133f7b1b2a2bd181",
-                        "cache-control: no-cache"
-                    ],
-                ));
-
-                $response = curl_exec($curl);
-                $err = curl_error($curl);
+                $curl_response = paymentMethod::processConfirmPayment($reference, $curl);
+                $response = curl_exec($curl_response);
+                $err = curl_error($curl_response);
 
                 if($err){
                     // there was an error contacting the Paystack API
@@ -281,18 +229,9 @@ class PaymentController extends Controller
                     session()->forget('transaction_summary');
                     return view('actions.payment_failure_page')->with('failure', 'Could not be Confirmed.');
                 }
-                curl_setopt_array($curl, array(
-                    CURLOPT_URL => "https://api.paystack.co/transaction/verify/" . rawurlencode($reference),
-                    CURLOPT_RETURNTRANSFER => true,
-                    CURLOPT_HTTPHEADER => [
-                        "accept: application/json",
-                        "authorization: Bearer sk_test_c73dcf5db9c50537e01dd4cb133f7b1b2a2bd181",
-                        "cache-control: no-cache"
-                    ],
-                ));
-
-                $response = curl_exec($curl);
-                $err = curl_error($curl);
+                $curl_response = paymentMethod::processConfirmPayment($reference, $curl);
+                $response = curl_exec($curl_response);
+                $err = curl_error($curl_response);
 
                 if($err){
                     // there was an error contacting the Paystack API
@@ -316,7 +255,7 @@ class PaymentController extends Controller
                     $update_wallet->credit_balance = $update_wallet->credit_balance + $transaction_data['amount'];
                     $update_wallet->save();
 
-                    if ($transaction_data['membership_upgrade']){
+                    if (array_key_exists('membership_upgrade', $transaction_data) ){
                         $customer_details = CustomerDetail::where('user_id', Auth::user()->id)->first();
                         $customer_details->membership_id = $transaction_data['membership_upgrade'];
                         $customer_details->save();

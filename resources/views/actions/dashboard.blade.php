@@ -235,7 +235,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                       {{-- @if(count($credits) > 5)
+
                                             <div class="pagination-container mt-4">
                                                 <div class="container">
                                                     <div class="row">
@@ -254,7 +254,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                        @endif--}}
+
                                     </div>
                                 </div>
 
