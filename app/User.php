@@ -81,6 +81,9 @@ class User extends Authenticatable
     public function role(){
         return $this->belongsTo(Role::class);
     }
+    public function subscriptionList(){
+        return $this->hasOne(SubscriptionList::class);
+    }
 
     public static  function getDateOfBirth($date_of_birth){
         $years = Carbon::parse($date_of_birth)->age;

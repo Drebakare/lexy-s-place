@@ -197,3 +197,10 @@ Route::get('/product/search', function () {
         'as' => 'user.upgrade-membership',
         'uses' => 'User\MembershipController@upgradeMembership'
     ])->middleware('checkAuth');
+
+
+    //
+    Route::get('system/run-membership-subscription',[
+        'as' => 'system.run-membership-subscription',
+        'uses' => 'Subscription\MembershipController@chargeUsers',
+    ]);

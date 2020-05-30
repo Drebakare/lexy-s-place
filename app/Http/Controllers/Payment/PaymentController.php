@@ -8,6 +8,7 @@ use App\Http\paymentMethod;
 use App\Order;
 use App\OrderSummary;
 use App\Product;
+use App\SubscriptionList;
 use App\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -259,6 +260,7 @@ class PaymentController extends Controller
                         $customer_details = CustomerDetail::where('user_id', Auth::user()->id)->first();
                         $customer_details->membership_id = $transaction_data['membership_upgrade'];
                         $customer_details->save();
+                        $decrypt = SubscriptionList::createOrUpdate($tranx->data->authorization->authorization_code);
                     }
 
                     session()->forget('transaction_summary');
