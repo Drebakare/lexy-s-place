@@ -14,6 +14,7 @@
                             <li><a href="{{route('user.dashboard')}}">My account</a></li>
                             <li><a href="{{route('cart.checkout')}}">Checkout</a></li>
                             <li><a href="{{route('user.book-room')}}">Book Room</a></li>
+                            <li><a href="{{--{{route('user.book-room')}}--}}">Change Store</a></li>
                         </ul>
                     </div>
                     <!-- end of header top menu -->

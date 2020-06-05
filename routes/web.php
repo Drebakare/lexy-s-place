@@ -13,27 +13,31 @@ use Illuminate\Support\Facades\Route;
 |
 */
     Route::get('/', [
+        'as' => 'store_session',
+        'uses' => 'User\HomepageController@displayForm'
+    ]);
+    Route::get('/homepage', [
         'as' => 'homepage',
         'uses' => 'User\HomepageController@Homepage'
     ]);
-Route::get('/success', function () {
-    return view('actions.failure_page');
-})->name('success');
-Route::get('/login', function () {
-    return view('actions.login');
-})->name('login');
+    Route::get('/success', function () {
+        return view('actions.failure_page');
+    })->name('success');
+    Route::get('/login', function () {
+        return view('actions.login');
+    })->name('login');
 
-Route::get('/registration', function () {
-    return view('actions.registration');
-})->name('registration');
+    Route::get('/registration', function () {
+        return view('actions.registration');
+    })->name('registration');
 
-/*Route::get('/user/checkout', function () {
-    return view('actions.c');
-})->name('cart');*/
+    /*Route::get('/user/checkout', function () {
+        return view('actions.c');
+    })->name('cart');*/
 
-Route::get('/product/search', function () {
-    return view('actions.search');
-})->name('search');
+    Route::get('/product/search', function () {
+        return view('actions.search');
+    })->name('search');
 
 
 //User Authentication
@@ -68,6 +72,10 @@ Route::get('/product/search', function () {
     Route::post('/set-age-session', [
         'as' => 'set-age-session',
         'uses' => 'Auth\AuthenticationController@setAgeSession'
+    ]);
+    Route::post('/set-store-session', [
+        'as' => 'set-store-session',
+        'uses' => 'Auth\AuthenticationController@setStoreSession'
     ]);
 
     // social media login

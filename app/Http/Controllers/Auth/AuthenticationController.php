@@ -192,6 +192,30 @@ class AuthenticationController extends Controller
         }
     }
 
+    public function setStoreSession(Request $request){
+        $this->validate($request, [
+           'store' => 'bail|required'
+        ]);
+        try {
+            if($request->session()->has('check_store_session'))
+            {
+                $request->session()->put('check_store_session', $request->store);
+                if (\session()->get('cart')){
+                    $request->session()->forget('cart');
+                }
+                return redirect(route('homepage'))->with('success', 'Store Updated Successfully');
+            }
+            else{
+                $request->session()->put('check_store_session', $request->store);
+                return redirect()->back()->with('success', 'Store Information Successfully Set');
+
+            }
+        }
+        catch (\Exception $exception){
+            return redirect()->back()->with('failure', $exception->getMessage());
+        }
+    }
+
     // social media login
     public function redirectToProvider($social){
         try {

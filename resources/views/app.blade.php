@@ -41,6 +41,7 @@
     <div id="wrapper" class="wrapper">
         @include('layouts.header')
         @yield('contents')
+        @yield('select_store')
         <footer class="footer">
             @include('layouts.footer')
         </footer>
@@ -98,6 +99,45 @@
     <button type="button" id="click_me" class="btn btn-primary" data-toggle="modal" data-target="#birth-confirmation" hidden>
         ""
     </button>
+
+
+    <div class="modal fade" id="store_session_form" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" data-backdrop="static" data-keyboard="false" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="text-center">
+                        <div class="logo mt-20 mb-10">
+                            <a href="{{route('homepage')}}">
+                                <h4 style="color: #80bb01">Lexican Investment LTD</h4>
+                            </a>
+                        </div>
+                        <h5> Lets know what branch You are Visiting</h5>
+                        <div class="col-sm-12 col-md-12 col-xs-12 col-lg-12 mb-20">
+                            <form action="{{route('set-store-session')}}" method="post">
+                                @csrf
+                                <div class="login-form">
+                                    <h4>Select Store</h4>
+                                    <div class="row">
+                                        <label>Select Store Branch</label>
+                                        <select name="store" id="table-number" class="nice-select">
+                                            @foreach(\App\Helpers\Stores::Stores() as $store)
+                                                <option value="{{$store->id}}">{{$store->store_name}}</option>
+                                            @endforeach
+                                        </select>
+                                        <div class="col-6 offset-md-3 offset-sm-2 offset-xs-2">
+                                            <button type="submit" class="register-button mt-0">Select</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <button type="button" id="set_store_session" class="btn btn-primary" data-toggle="modal" data-target="#store_session_form" hidden>
+    </button>
 <!-- JS
 ============================================ -->
 <!-- jQuery JS -->
@@ -142,16 +182,22 @@
 
     </script>
     <script type="text/javascript">
-        $( document ).ready(function() {
-            @if(!Auth::check() && !session()->has('age'))
+       /* $( document ).ready(function() {
+            {{--@if(!Auth::check() && !session()->has('age'))
                 $('#click_me').click();
-            @endif
-        });
+            @endif--}}
+        });*/
         $(document).ready(function() {
             $('.js-example-basic-single').select2();
         });
     </script>
-    @yield('script_contents')
+    <script type="text/javascript">
+        $( document ).ready(function() {
+            @if(!session()->has('check_store_session'))
+            $('button#set_store_session').click();
+            @endif
+        });
+    </script>
 </body>
 </html>
 

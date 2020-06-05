@@ -45,7 +45,8 @@ class Product extends Model
     public static function getSomeProducts(){
         //select all products but check if its still in stock
         $products = Product::whereHas('stocks', function($query){
-            $query->where('qty','>' , 0);
+            $query->where('qty','>' , 0)
+            ->where('store_id', session()->get('check_store_session'));
         })->inRandomOrder()->/*get()*/paginate(3);
 
         // limit the no of products to be displayed to 20

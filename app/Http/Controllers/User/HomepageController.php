@@ -15,4 +15,13 @@ class HomepageController extends Controller
         $categories = DrinkType::getAllCategories();
         return view('homepage', compact('products', 'categories'));
     }
+    public function displayForm(){
+        session()->forget('check_store_session');
+        if (session()->get('check_store_session')){
+            return redirect(route('homepage'));
+        }
+        else{
+            return view('set_session');
+        }
+    }
 }
