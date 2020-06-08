@@ -18,6 +18,9 @@ class Booking extends Model
     public function period(){
         return $this->belongsTo(Period::class);
     }
+    public function store(){
+        return $this->belongsTo(Store::class);
+    }
 
     public static function confirmAvailability($period){
         $status = Booking::where(['period_id' => $period->id, 'booking_status' => 0])

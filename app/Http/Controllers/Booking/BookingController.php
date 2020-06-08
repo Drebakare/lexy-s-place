@@ -13,6 +13,11 @@ use Illuminate\Support\Str;
 
 class BookingController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('checkStoreSession');
+    }
+
     public function bookRoom(){
         if (session()->get('intended_url')){
             session()->forget('intended_url');
@@ -24,7 +29,6 @@ class BookingController extends Controller
                 unset($periods[$key]);
             }
         }
-        $bookings = Booking::getBookings();
         $membership_id = CustomerDetail::getUserDetails()->membership_id;
         return view('actions.booking', compact('periods', 'membership_id'));
     }
@@ -50,6 +54,7 @@ class BookingController extends Controller
                     $booking->payment_status = 1;
                     $booking->receipt_no = Str::random(15);
                     $booking->token = Str::random(15);
+                    $booking->store_id = session()->get('check_store_session');
                     $booking->save();
 
                     //record transactions
@@ -60,8 +65,8 @@ class BookingController extends Controller
                     $transaction->transaction_type = 'Wallet-Debit-Booking';
                     $transaction->transaction_status = 1;
                     $transaction->token = Str::random(15);
+                    $transaction->store_id = session()->get('check_store_session');
                     $transaction->save();
-
                     return view('actions.booking_success_page', compact('booking'));
                 }
                 else{

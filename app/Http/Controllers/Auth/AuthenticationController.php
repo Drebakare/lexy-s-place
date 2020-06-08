@@ -16,6 +16,11 @@ use MongoDB\Driver\Session;
 
 class AuthenticationController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('checkStoreSession');
+    }
+
     public function userRegistration(Request $request){
         $this->validate($request, [
             'password' => 'bail|confirmed|required',
@@ -54,8 +59,11 @@ class AuthenticationController extends Controller
                             break;
                         }
                         break;
+                    case 2:
+                        return redirect(route('admin.dashboard'))->with('success', 'Login Successful');
+                        break;
                     default:
-                        return redirect(route('user.dashboard'))->with('success', 'Login Successful');
+                        return redirect(route('admin.dashboard'))->with('success', 'Login Successful');
                 }
             }
             else{
@@ -93,6 +101,9 @@ class AuthenticationController extends Controller
                             return redirect(route('user.dashboard'))->with('success', 'Login Successful');
                             break;
                         }
+                        break;
+                    case 2:
+                        return redirect(route('admin.dashboard'))->with('success', 'Login Successful');
                         break;
                     default:
                         return redirect(route('user.dashboard'))->with('success', 'Login Successful');
@@ -192,29 +203,6 @@ class AuthenticationController extends Controller
         }
     }
 
-    public function setStoreSession(Request $request){
-        $this->validate($request, [
-           'store' => 'bail|required'
-        ]);
-        try {
-            if($request->session()->has('check_store_session'))
-            {
-                $request->session()->put('check_store_session', $request->store);
-                if (\session()->get('cart')){
-                    $request->session()->forget('cart');
-                }
-                return redirect(route('homepage'))->with('success', 'Store Updated Successfully');
-            }
-            else{
-                $request->session()->put('check_store_session', $request->store);
-                return redirect()->back()->with('success', 'Store Information Successfully Set');
-
-            }
-        }
-        catch (\Exception $exception){
-            return redirect()->back()->with('failure', $exception->getMessage());
-        }
-    }
 
     // social media login
     public function redirectToProvider($social){
@@ -247,8 +235,11 @@ class AuthenticationController extends Controller
                                 break;
                             }
                             break;
+                        case 2:
+                            return redirect(route('admin.dashboard'))->with('success', 'Login Successful');
+                            break;
                         default:
-                            return redirect(route('user.dashboard'))->with('success', 'Login Successful');
+                            return redirect(route('admin.dashboard'))->with('success', 'Login Successful');
                     }
                 }
                 else{

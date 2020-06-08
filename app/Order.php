@@ -26,6 +26,9 @@ class Order extends Model
     public function orderSummaries(){
         return $this->hasMany(OrderSummary::class);
     }
+    public function store(){
+        return $this->belongsTo(Store::class);
+    }
 
     public static function calculateTotalOrderPrice(){
         $total = 0.0;

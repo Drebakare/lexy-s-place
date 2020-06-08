@@ -14,6 +14,9 @@ class Transaction extends Model
     public function user(){
         return $this->belongsTo(User::class);
     }
+    public function store(){
+        return $this->belongsTo(Store::class);
+    }
     public static function getUserTransactions(){
         $transactions = Transaction::where('user_id', Auth::user()->id)->get();
         return $transactions;

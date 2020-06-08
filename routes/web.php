@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Route;
     Route::get('/homepage', [
         'as' => 'homepage',
         'uses' => 'User\HomepageController@Homepage'
-    ]);
+    ])->middleware('checkStoreSession');
     Route::get('/success', function () {
         return view('actions.failure_page');
     })->name('success');
@@ -30,10 +30,6 @@ use Illuminate\Support\Facades\Route;
     Route::get('/registration', function () {
         return view('actions.registration');
     })->name('registration');
-
-    /*Route::get('/user/checkout', function () {
-        return view('actions.c');
-    })->name('cart');*/
 
     Route::get('/product/search', function () {
         return view('actions.search');
@@ -75,7 +71,7 @@ use Illuminate\Support\Facades\Route;
     ]);
     Route::post('/set-store-session', [
         'as' => 'set-store-session',
-        'uses' => 'Auth\AuthenticationController@setStoreSession'
+        'uses' => 'User\HomepageController@setStoreSession'
     ]);
 
     // social media login
@@ -211,4 +207,12 @@ use Illuminate\Support\Facades\Route;
     Route::get('system/run-membership-subscription',[
         'as' => 'system.run-membership-subscription',
         'uses' => 'Subscription\MembershipController@chargeUsers',
+    ]);
+
+
+
+    //Admin Processes Start Here
+    Route::get('admin/dashboard',[
+        'as' => 'admin.dashboard',
+        'uses' => 'Admin\DashboardController@Dashboard',
     ]);

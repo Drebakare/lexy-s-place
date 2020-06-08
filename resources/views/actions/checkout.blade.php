@@ -53,9 +53,9 @@
                                             <p>Sub Total <span>N {{number_format($total)}}</span></p>
                                             <p>Membership Discount <span>- {{$membership_discount}} %</span></p>
                                             <p>Shipping Fee <span>N 00.00</span></p>
+                                            <p>Store <span>{{$store->store_name}}</span></p>
                                             <p style="font-size: x-small">
                                               Tax  <span>VAT of N {{number_format($total * ($tax->tax/(100 + $tax->tax)))}} inclusive</span>
-
                                             </p>
                                             <h4>Grand Total <span>N {{number_format($discount)}}</span></h4>
                                         </div>
@@ -73,11 +73,9 @@
                                         <div class="col-md-12">
                                             <label>Table*</label>
                                             <select name="table" id="table-number" class="nice-select">
-                                                <option value="1">1</option>
-                                                <option value="2">2</option>
-                                                <option value="3">3</option>
-                                                <option value="4">4</option>
-                                                <option value="5">5</option>
+                                                @foreach($tables as $table)
+                                                    <option value="{{$table->id}}">{{$table->id}}</option>
+                                                @endforeach
                                             </select>
                                         </div>
                                         <input value="{{$discount}}" name="amount" hidden>

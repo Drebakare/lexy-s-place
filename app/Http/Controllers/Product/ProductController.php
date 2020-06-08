@@ -6,7 +6,10 @@ use App\Brand;
 use App\CustomerDetail;
 use App\DrinkType;
 use App\Http\Controllers\Controller;
+use App\Http\Middleware\checkStoreSession;
 use App\Product;
+use App\Store;
+use App\Table;
 use App\Tax;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
@@ -15,6 +18,13 @@ use Illuminate\Support\Facades\URL;
 
 class ProductController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('checkStoreSession', ['except' => [
+            'addToCart', 'updateCart', 'removeProduct'
+        ]]);
+    }
+
     public function viewProduct($name,$token){
         $product = Product::getProduct($token); // get the specific product being requested for
         $related_products = Product::getRelatedProducts($product->drinkType->id); // get other products based on the product category
@@ -416,11 +426,12 @@ class ProductController extends Controller
             $membership_discount =  $user->membership->discount;
             session()->put('cart', $cart);
             $tax = Tax::findorfail(1);
-
+            $store = Store::where('id', session()->get('check_store_session'))->first();
+            $tables = Table::where('store_id', session()->get('check_store_session'))->get();
         }
         else{
             return redirect(route('homepage'))->with('failure', "You do not have any active cart yet");
         }
-        return view('actions.checkout', compact('total', 'tax', 'discount', 'membership_discount'));
+        return view('actions.checkout', compact('total', 'tax', 'discount', 'membership_discount', 'store', 'tables'));
     }
 }

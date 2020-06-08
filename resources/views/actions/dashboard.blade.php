@@ -132,6 +132,7 @@
                                                     <th>Table Number</th>
                                                     <th>Payment Status</th>
                                                     <th>Order Status</th>
+                                                    <th>Store</th>
                                                     <th>Date</th>
                                                     {{--<th></th>--}}
                                                     <th>Action</th>
@@ -147,6 +148,7 @@
                                                         <td> Table - {{$order->table_id}}</td>
                                                         <td>{{$order->status == 0 ? 'Pending' : "Finished"}}</td>
                                                         <td>{{$order->order_status == 0 ? 'Pending' : "Finished"}}</td>
+                                                        <td>{{$order->store->store_name}}</td>
                                                         <td>{{/*Carbon\Carbon::parse(*/$order->created_at/*)->format('d/m/Y')*/}}</td>
                                                         <td><a href="{{route('user.view-order', ['token' => $order->token])}}" class="btn">View</a></td>
                                                     </tr>
@@ -170,6 +172,7 @@
                                                     <th>Transaction Type</th>
                                                     <th>Amount</th>
                                                     <th>Status</th>
+                                                    <th>Store</th>
                                                     <th>Date</th>
                                                 </tr>
                                                 </thead>
@@ -181,6 +184,7 @@
                                                         <td>{{$transaction->transaction_type}}</td>
                                                         <td>{{$transaction->amount}}</td>
                                                         <td>{{$transaction->transaction_status == 0 ? "Pending" : "Finished"}}</td>
+                                                        <td>{{$transaction->transaction_type == "Credit - Wallet" ? "---" : $transaction->store->store_name}}</td>
                                                         <td>{{/*Carbon\Carbon::parse(*/$transaction->created_at/*)->format('d/m/Y')*/}}</td>
                                                     </tr>
                                                 @endforeach
@@ -263,13 +267,14 @@
                                     <div class="myaccount-content">
                                         <h3>My Bookings</h3>
                                         <div class="myaccount-table table-responsive text-center">
-                                            <table id="transactions" class="table table-bordered">
+                                            <table id="bookings" class="table table-bordered">
                                                 <thead class="thead-light">
                                                 <tr>
                                                     <th>Receipt Number</th>
                                                     <th>Period</th>
                                                     <th>Status</th>
                                                     <th>Token</th>
+                                                    <th>Store</th>
                                                     <th>Date</th>
                                                 </tr>
                                                 </thead>
@@ -281,7 +286,8 @@
                                                         <td>{{$booking->period->period}}</td>
                                                         <td>{{$booking->booking_status == 0 ? "Pending" : "Finished"}}</td>
                                                         <td>{{$booking->token}}</td>
-                                                        <td>{{/*Carbon\Carbon::parse(*/$transaction->created_at/*)->format('d/m/Y')*/}}</td>
+                                                        <td>{{$booking->store->store_name}}</td>
+                                                        <td>{{/*Carbon\Carbon::parse(*/$booking->created_at/*)->format('d/m/Y')*/}}</td>
                                                     </tr>
                                                 @endforeach
                                                 </tbody>
@@ -395,19 +401,19 @@
     <script type="text/javascript">
         $(document).ready(function() {
             $('table#orders').DataTable({
-                "order" : [[4,'desc']]
+                "order" : [[7,'desc']]
             });
         } );
 
         $(document).ready(function() {
             $('table#transactions').DataTable({
-                "order" : [[4,'desc']]
+                "order" : [[5,'desc']]
             });
         } );
 
         $(document).ready(function() {
             $('table#bookings').DataTable({
-                "order" : [[4,'desc']]
+                "order" : [[5,'desc']]
             });
         } );
     </script>

@@ -17,6 +17,11 @@ use League\CommonMark\Block\Renderer\BlockQuoteRenderer;
 
 class PaymentController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('checkStoreSession');
+    }
+
     public function makePayment(Request $request)
     {
         try{
@@ -32,6 +37,7 @@ class PaymentController extends Controller
                 $create_order->membership_id = 1;
                 $create_order->token = Str::random(15);
                 $create_order->table_id = $request->table;
+                $create_order->store_id = session()->get('check_store_session');
                 $create_order->save();
                 // create order summaries
                 foreach (session()->get('cart') as $product){
@@ -79,6 +85,7 @@ class PaymentController extends Controller
                     $create_order->membership_id = 1;
                     $create_order->token = Str::random(15);
                     $create_order->table_id = $request->table;
+                    $create_order->store_id = session()->get('check_store_session');
                     $create_order->save();
 
                     // create order summaries
@@ -111,6 +118,7 @@ class PaymentController extends Controller
                             $transaction->transaction_type = 'Wallet- Debit - Order';
                             $transaction->transaction_status = 1;
                             $transaction->token = Str::random(15);
+                            $transaction->store_id = session()->get('check_store_session');
                             $transaction->save();
                             $order = Order::where('token', $create_order->token)->first();
 
@@ -216,6 +224,7 @@ class PaymentController extends Controller
                     $transaction->transaction_type = 'Online - Debit - Order';
                     $transaction->transaction_status = 1;
                     $transaction->token = Str::random(15);
+                    $transaction->token =  session()->get('check_store_session');
                     $transaction->save();
 
                     session()->forget('transaction_summary');

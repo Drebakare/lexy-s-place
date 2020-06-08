@@ -164,8 +164,6 @@
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
 
-
-
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     <script type="text/javascript">
         @if(session('failure'))
@@ -179,7 +177,6 @@
         @if(session('success'))
         toastr.success('{{session("success")}}');
         @endif
-
     </script>
     <script type="text/javascript">
        /* $( document ).ready(function() {
@@ -198,6 +195,7 @@
             @endif
         });
     </script>
+    @yield('script_contents')
 </body>
 </html>
 

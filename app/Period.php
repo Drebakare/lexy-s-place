@@ -18,6 +18,6 @@ class Period extends Model
     }
 
     public static function getPeriods(){
-        return Period::get();
+        return Period::where('store_id', session()->get('check_store_session'))->get();
     }
 }

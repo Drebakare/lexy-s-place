@@ -37,7 +37,7 @@
     <!-- Fav and Touch Icons -->
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
 </head>
-<body style="background-image: url("{{asset('_landing/assets/images/sliders/home1-slider1.jpeg')}}")">
+<body style="background-image: url('./_landing/assets/images/sliders/session.jpg'); background-repeat: no-repeat">
 <div class="modal fade" id="store_session_form" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" data-backdrop="static" data-keyboard="false" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">

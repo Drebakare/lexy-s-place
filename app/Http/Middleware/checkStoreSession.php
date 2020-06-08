@@ -19,7 +19,7 @@ class checkStoreSession
             return $next($request);
         }
         else{
-            return redirect(route('homepage'))->with('You need to Select the store before you continue');
+            return redirect(route('store_session'))->with('You need to Select the store before you continue');
         }
 
     }
