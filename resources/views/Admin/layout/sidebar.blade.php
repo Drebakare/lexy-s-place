@@ -9,18 +9,42 @@
                 <li class="menu-title">Menu</li>
 
                 <li>
-                    <a href="javascript: void(0);" class="waves-effect">
-                        <i class="bx bx-home-circle"></i><span class="badge badge-pill badge-info float-right">03</span>
+                    <a href="{{route('admin.dashboard')}}" class="waves-effect">
+                        {{--<i class="bx bx-home-circle"></i><span class="badge badge-pill badge-info float-right">03</span>--}}
                         <span>Dashboards</span>
                     </a>
-                    <ul class="sub-menu" aria-expanded="false">
+                    {{--<ul class="sub-menu" aria-expanded="false">
                         <li><a href="index.html">Default</a></li>
                         <li><a href="dashboard-saas.html">Saas</a></li>
                         <li><a href="dashboard-crypto.html">Crypto</a></li>
-                    </ul>
+                    </ul>--}}
                 </li>
 
                 <li>
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="bx bx-plus"></i>
+                        <span>Store</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li><a href="{{route('admin.update-stores')}}">Create/Edit Store</a></li>
+                        <li><a href="layouts-light-sidebar.html">Light Sidebar</a></li>
+                        <li><a href="layouts-compact-sidebar.html">Compact Sidebar</a></li>
+                        <li><a href="layouts-icon-sidebar.html">Icon Sidebar</a></li>
+                        <li><a href="layouts-boxed.html">Boxed Width</a></li>
+                        <li><a href="layouts-preloader.html">Preloader</a></li>
+                        <li><a href="layouts-colored-sidebar.html">Colored Sidebar</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="bx bx-user"></i>
+                        <span>Users</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li><a href="{{route('admin.view-users')}}">User Management</a></li>
+                    </ul>
+                </li>
+                <li class="d-none">
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
                         <i class="bx bx-layout"></i>
                         <span>Layouts</span>
@@ -36,16 +60,16 @@
                     </ul>
                 </li>
 
-                <li class="menu-title">Apps</li>
+                <li class="menu-title d-none">Apps</li>
 
-                <li>
+                <li class="d-none">
                     <a href="calendar.html" class=" waves-effect">
                         <i class="bx bx-calendar"></i>
                         <span>Calendar</span>
                     </a>
                 </li>
 
-                <li>
+                <li class="d-none">
                     <a href="chat.html" class=" waves-effect">
                         <i class="bx bx-chat"></i>
                         <span class="badge badge-pill badge-success float-right">New</span>
@@ -53,7 +77,7 @@
                     </a>
                 </li>
 
-                <li>
+                <li class="d-none">
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
                         <i class="bx bx-store"></i>
                         <span>Ecommerce</span>
@@ -70,7 +94,7 @@
                     </ul>
                 </li>
 
-                <li>
+                <li class="d-none">
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
                         <i class="bx bx-bitcoin"></i>
                         <span>Crypto</span>
@@ -86,7 +110,7 @@
                     </ul>
                 </li>
 
-                <li>
+                <li class="d-none">
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
                         <i class="bx bx-envelope"></i>
                         <span>Email</span>
@@ -97,7 +121,7 @@
                     </ul>
                 </li>
 
-                <li>
+                <li class="d-none">
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
                         <i class="bx bx-receipt"></i>
                         <span>Invoices</span>
@@ -108,7 +132,7 @@
                     </ul>
                 </li>
 
-                <li>
+                <li class="d-none">
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
                         <i class="bx bx-briefcase-alt-2"></i>
                         <span>Projects</span>
@@ -121,7 +145,7 @@
                     </ul>
                 </li>
 
-                <li>
+                <li class="d-none">
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
                         <i class="bx bx-task"></i>
                         <span>Tasks</span>
@@ -133,7 +157,7 @@
                     </ul>
                 </li>
 
-                <li>
+                <li class="d-none">
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
                         <i class="bx bxs-user-detail"></i>
                         <span>Contacts</span>
@@ -145,9 +169,9 @@
                     </ul>
                 </li>
 
-                <li class="menu-title">Pages</li>
+                <li class="menu-title d-none">Pages</li>
 
-                <li>
+                <li class="d-none">
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
                         <i class="bx bx-user-circle"></i>
                         <span>Authentication</span>
@@ -160,7 +184,7 @@
                     </ul>
                 </li>
 
-                <li>
+                <li class="d-none">
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
                         <i class="bx bx-file"></i>
                         <span>Utility</span>
@@ -177,9 +201,9 @@
                     </ul>
                 </li>
 
-                <li class="menu-title">Components</li>
+                <li class="menu-title d-none">Components</li>
 
-                <li>
+                <li class="d-none">
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
                         <i class="bx bx-tone"></i>
                         <span>UI Elements</span>
@@ -209,7 +233,7 @@
                     </ul>
                 </li>
 
-                <li>
+                <li class="d-none">
                     <a href="javascript: void(0);" class="waves-effect">
                         <i class="bx bxs-eraser"></i>
                         <span class="badge badge-pill badge-danger float-right">6</span>
@@ -228,7 +252,7 @@
                     </ul>
                 </li>
 
-                <li>
+                <li class="d-none">
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
                         <i class="bx bx-list-ul"></i>
                         <span>Tables</span>
@@ -241,7 +265,7 @@
                     </ul>
                 </li>
 
-                <li>
+                <li class="d-none">
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
                         <i class="bx bxs-bar-chart-alt-2"></i>
                         <span>Charts</span>
@@ -257,7 +281,7 @@
                     </ul>
                 </li>
 
-                <li>
+                <li class="d-none">
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
                         <i class="bx bx-aperture"></i>
                         <span>Icons</span>
@@ -270,7 +294,7 @@
                     </ul>
                 </li>
 
-                <li>
+                <li class="d-none">
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
                         <i class="bx bx-map"></i>
                         <span>Maps</span>
@@ -282,7 +306,7 @@
                     </ul>
                 </li>
 
-                <li>
+                <li class="d-none">
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
                         <i class="bx bx-share-alt"></i>
                         <span>Multi Level</span>

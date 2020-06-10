@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Payment;
 
+use App\AuditTrail;
 use App\CustomerDetail;
 use App\Http\Controllers\Controller;
 use App\Http\paymentMethod;
@@ -68,6 +69,8 @@ class PaymentController extends Controller
                     'type' => 'order',
                 ];
                 session()->put('transaction_summary',$transaction_summary);
+                $action = "Attempted to make payment online for an order with receipt no ".$create_order->receipt_no;
+                AuditTrail::createLog(Auth::user()->id, $action);
 
                 return redirect($tranx['data']['authorization_url']);
             }
@@ -121,7 +124,8 @@ class PaymentController extends Controller
                             $transaction->store_id = session()->get('check_store_session');
                             $transaction->save();
                             $order = Order::where('token', $create_order->token)->first();
-
+                            $action = "Made payment using wallet for an order with receipt no ".$create_order->receipt_no;
+                            AuditTrail::createLog(Auth::user()->id, $action);
                             return view('actions.success_page', compact('order'));
                         }
                         else{
@@ -171,7 +175,8 @@ class PaymentController extends Controller
                 'type' => 'credit',
             ];
             session()->put('transaction_summary',$transaction_summary);
-
+            $action = "Attempted to Credit wallet with transaction reference no ".$transaction->transaction_no;
+            AuditTrail::createLog(Auth::user()->id, $action);
             return redirect($tranx['data']['authorization_url']);
         }
         catch (\Exception $exception){
@@ -229,6 +234,9 @@ class PaymentController extends Controller
 
                     session()->forget('transaction_summary');
                     $order = Order::where('receipt_no', $receipt)->first();
+                    $action = "Completed order payment for order receipt ".$receipt;
+                    AuditTrail::createLog(Auth::user()->id, $action);
+
                     return view('actions.success_page', compact('order'));
                 }
             }
@@ -264,12 +272,15 @@ class PaymentController extends Controller
                     $update_wallet = CustomerDetail::where('user_id', Auth::user()->id)->first();
                     $update_wallet->credit_balance = $update_wallet->credit_balance + $transaction_data['amount'];
                     $update_wallet->save();
-
+                    $action = "Credited Wallet with " .$transaction_data['amount'];
+                    AuditTrail::createLog(Auth::user()->id, $action);
                     if (array_key_exists('membership_upgrade', $transaction_data) ){
                         $customer_details = CustomerDetail::where('user_id', Auth::user()->id)->first();
                         $customer_details->membership_id = $transaction_data['membership_upgrade'];
                         $customer_details->save();
                         $decrypt = SubscriptionList::createOrUpdate($tranx->data->authorization->authorization_code);
+                        $action = "Upgraded Membership Account";
+                        AuditTrail::createLog(Auth::user()->id, $action);
                     }
 
                     session()->forget('transaction_summary');

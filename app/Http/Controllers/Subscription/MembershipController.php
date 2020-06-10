@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Subscription;
 
+use App\AuditTrail;
 use App\CustomerDetail;
 use App\Http\Controllers\Controller;
 use App\Membership;
@@ -45,8 +46,10 @@ class MembershipController extends Controller
                     $user->status = 0;
                     $user->save();
                 }
+                $action = "Automatic Subscription Could not be mad";
+                AuditTrail::createLog($user->user_id, $action);
             }
-            if ("success" == $tranx['data']['status']){
+            if ("failure" == $tranx['data']['status']){
                 $change_membership = CustomerDetail::where('user_id', $user->user_id)->update([
                     'membership_id' => 1
                 ]);
@@ -54,6 +57,8 @@ class MembershipController extends Controller
                     $user->status = 0;
                     $user->save();
                 }
+                $action = "Successfully Subscribed for Membership upgrade";
+                AuditTrail::createLog($user->user_id, $action);
             }
             if ("success" == $tranx['data']['status']){
                 $update_wallet = CustomerDetail::where('user_id', $user->user_id )->first();

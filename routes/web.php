@@ -215,4 +215,24 @@ use Illuminate\Support\Facades\Route;
     Route::get('admin/dashboard',[
         'as' => 'admin.dashboard',
         'uses' => 'Admin\DashboardController@Dashboard',
-    ]);
+    ])->middleware('checkAdmin');
+
+    Route::get('admin/manage-stores',[
+        'as' => 'admin.update-stores',
+        'uses' => 'Admin\StoreController@index',
+    ])->middleware('checkAdmin');
+
+    Route::post('admin/create-store',[
+        'as' => 'submit-store-form',
+        'uses' => 'Admin\StoreController@createStore',
+    ])->middleware('checkAdmin');
+
+    Route::post('admin/edit-store-details/{token}',[
+        'as' => 'edit-store-details',
+        'uses' => 'Admin\StoreController@editStore',
+    ])->middleware('checkAdmin');
+
+    Route::get('admin/view-users',[
+        'as' => 'admin.view-users',
+        'uses' => 'Admin\UserController@index',
+    ])->middleware('checkAdmin');

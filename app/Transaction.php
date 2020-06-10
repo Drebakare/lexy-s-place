@@ -26,4 +26,13 @@ class Transaction extends Model
         $transactions = Transaction::where('user_id', Auth::user()->id)->paginate(6);
         return $transactions;
     }
+
+    public static function getSuccessfulTransactions(){
+        return Transaction::where('transaction_status', 1)->get();
+    }
+    public static function getLatestTransactions(){
+        return Transaction::where('transaction_status', 1)->OrderBy('created_at', 'desc')
+            ->take(5)
+            ->get();
+    }
 }

@@ -46,4 +46,7 @@ class Order extends Model
         $order = Order::where(['user_id'=> Auth::user()->id, 'token' => $token ])->first();
         return $order;
     }
+    public static function getFinishedOrders(){
+        return Order::where('status', '1')->get();
+    }
 }

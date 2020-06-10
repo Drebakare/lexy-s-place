@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\AuditTrail;
 use App\CustomerDetail;
 use App\Http\Controllers\Controller;
 use App\Membership;
@@ -44,6 +45,9 @@ class AuthenticationController extends Controller
 
             Mail::to($request->email)->send(new \App\Mail\RegistrationMail($user)); // send email to user
 
+            //create audit
+            AuditTrail::createLog($user->id, "Created An Account");
+
             // login user if registration successful
             if (Auth::attempt(['email' => $request->email, 'password' => $request->password])){
                 $role = Auth::user()->role_id;
@@ -76,6 +80,7 @@ class AuthenticationController extends Controller
     }
 
     public function Logout(){
+        AuditTrail::createLog(Auth::user()->id, "Logged out");
         Auth::logout();
         return redirect(route('homepage'))->with('success', 'Logout Successful');
     }
@@ -89,6 +94,7 @@ class AuthenticationController extends Controller
         try {
             // try authentication
             if (Auth::attempt(['email' => $request->email, 'password'=> $request->password])){
+                AuditTrail::createLog(Auth::user()->id, "Logged In Successfully");
                 $role = Auth::user()->role_id;
                 // check role for redirection
                 switch ($role){
@@ -126,6 +132,7 @@ class AuthenticationController extends Controller
             $user = User::getUserByEmail($request->email);
             if ($user){
                 // send email to user
+                AuditTrail::createLog($user->id, "Attempted to Change Password");
                 Mail::to($request->email)->send(new \App\Mail\forgotPasswordMail($user));
                 // return success message
                 return  redirect()->back()->with('success', 'A link to change your password is sent to your email address');
@@ -163,6 +170,7 @@ class AuthenticationController extends Controller
               'token' => Str::random(15),
             ]);
             if ($user){
+                AuditTrail::createLog($user->id, "Successfully Changed Password");
                 return redirect(route('login'))->with('success', 'Password Successfully Changed');
             }
             else{
@@ -222,6 +230,7 @@ class AuthenticationController extends Controller
                 $check_user = User::where('email', $user->getEmail())->first();
                 if ($check_user){
                     Auth::loginUsingId($check_user->id);
+                    AuditTrail::createLog(Auth::user()->id, "Logged In Successfully Using Social Media");
                     $role = Auth::user()->role_id;
                     // check role for redirection
                     switch ($role){
@@ -246,6 +255,7 @@ class AuthenticationController extends Controller
                     User::newUser($user->getEmail(), $user->getEmail(), $user->getName());
                     CustomerDetail::createNewCustomer($user->getEmail());
                     if (Auth::attempt(['email' => $user->getEmail(), 'password' => $user->getEmail()])) {
+                        AuditTrail::createLog(Auth::user()->id, "Created Account Through Social Media");
                         return redirect(route('user.dashboard'))->with('success', 'Authentication Successful');
                     }
                     else{

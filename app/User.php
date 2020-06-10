@@ -114,4 +114,14 @@ class User extends Authenticatable
             'DOB' => session('age')
         ]);
     }
+
+    public static function getAllCustomers(){
+        return User::where('role_id', 1)->get();
+    }
+
+    public static function getLatestUsers(){
+        return User::where('role_id', 1)->OrderBy('created_at', 'desc')
+            ->take(5)
+            ->get();
+    }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Booking;
 
+use App\AuditTrail;
 use App\Booking;
 use App\CustomerDetail;
 use App\Http\Controllers\Controller;
@@ -30,6 +31,7 @@ class BookingController extends Controller
             }
         }
         $membership_id = CustomerDetail::getUserDetails()->membership_id;
+        AuditTrail::createLog(Auth::user()->id, "Viewed Booking Page");
         return view('actions.booking', compact('periods', 'membership_id'));
     }
 
@@ -67,6 +69,7 @@ class BookingController extends Controller
                     $transaction->token = Str::random(15);
                     $transaction->store_id = session()->get('check_store_session');
                     $transaction->save();
+                    AuditTrail::createLog(Auth::user()->id, "Successfully Booked a Room");
                     return view('actions.booking_success_page', compact('booking'));
                 }
                 else{

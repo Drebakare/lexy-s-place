@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Product;
 
+use App\AuditTrail;
 use App\Brand;
 use App\CustomerDetail;
 use App\DrinkType;
@@ -428,6 +429,7 @@ class ProductController extends Controller
             $tax = Tax::findorfail(1);
             $store = Store::where('id', session()->get('check_store_session'))->first();
             $tables = Table::where('store_id', session()->get('check_store_session'))->get();
+            AuditTrail::createLog(Auth::user()->id, 'Proceeded to checking out');
         }
         else{
             return redirect(route('homepage'))->with('failure', "You do not have any active cart yet");
