@@ -65,7 +65,21 @@
                                         <td>
                                             {{$user->created_at}}
                                         </td>
-                                        <td><button class="btn btn-sm btn-outline-primary waves-effect waves-light" data-toggle="modal" data-target="#edit-store-{{$key}}"> Edit</button></td>
+                                        <td>
+                                            <a href="#">
+                                                <span>
+                                                    <i class="mdi mdi-account-arrow-right mdi-24px"></i>
+                                                </span>
+                                            </a>
+                                            <a href="#">
+                                                <span>
+                                                    <i class="mdi mdi-eye-circle mdi-24px"></i>
+                                                </span>
+                                            </a>
+{{--
+                                            <button class="btn btn-sm btn-outline-primary waves-effect waves-light" data-toggle="modal" data-target="#edit-store-{{$key}}"> Edit</button>
+--}}
+                                        </td>
                                     </tr>
                                 @endforeach
                                 </tbody>
