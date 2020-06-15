@@ -23,6 +23,10 @@ class Store extends Model
         return $this->hasMany(Booking::class);
     }
 
+    public function users(){
+        return $this->hasMany(User::class);
+    }
+
     public static function checkStore($token){
         $store = Store::where('token', $token)->first();
         if ($store){

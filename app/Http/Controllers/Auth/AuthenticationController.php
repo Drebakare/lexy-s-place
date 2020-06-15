@@ -50,6 +50,10 @@ class AuthenticationController extends Controller
 
             // login user if registration successful
             if (Auth::attempt(['email' => $request->email, 'password' => $request->password])){
+                if (Auth::user()->active == 0){
+                    Auth::logout();
+                    return redirect(route('actions.login'))->with('failure', "Your Account Has Been Suspended");
+                }
                 $role = Auth::user()->role_id;
                 // check role for redirection
                 switch ($role){
@@ -94,6 +98,10 @@ class AuthenticationController extends Controller
         try {
             // try authentication
             if (Auth::attempt(['email' => $request->email, 'password'=> $request->password])){
+                if (Auth::user()->active == 0){
+                    Auth::logout();
+                    return redirect(route('actions.login'))->with('failure', "Your Account Has Been Suspended");
+                }
                 AuditTrail::createLog(Auth::user()->id, "Logged In Successfully");
                 $role = Auth::user()->role_id;
                 // check role for redirection
@@ -230,6 +238,10 @@ class AuthenticationController extends Controller
                 $check_user = User::where('email', $user->getEmail())->first();
                 if ($check_user){
                     Auth::loginUsingId($check_user->id);
+                    if (Auth::user()->active == 0){
+                        Auth::logout();
+                        return redirect(route('actions.login'))->with('failure', "Your Account Has Been Suspended");
+                    }
                     AuditTrail::createLog(Auth::user()->id, "Logged In Successfully Using Social Media");
                     $role = Auth::user()->role_id;
                     // check role for redirection
@@ -255,6 +267,10 @@ class AuthenticationController extends Controller
                     User::newUser($user->getEmail(), $user->getEmail(), $user->getName());
                     CustomerDetail::createNewCustomer($user->getEmail());
                     if (Auth::attempt(['email' => $user->getEmail(), 'password' => $user->getEmail()])) {
+                        if (Auth::user()->active == 0){
+                            Auth::logout();
+                            return redirect(route('actions.login'))->with('failure', "Your Account Has Been Suspended");
+                         }
                         AuditTrail::createLog(Auth::user()->id, "Created Account Through Social Media");
                         return redirect(route('user.dashboard'))->with('success', 'Authentication Successful');
                     }

@@ -236,3 +236,65 @@ use Illuminate\Support\Facades\Route;
         'as' => 'admin.view-users',
         'uses' => 'Admin\UserController@index',
     ])->middleware('checkAdmin');
+
+    Route::post('admin/edit-membership-details/{token}',[
+        'as' => 'edit-membership-details',
+        'uses' => 'Admin\UserController@editMembershipDetails',
+    ])->middleware('checkAdmin');
+
+    Route::get('admin/view-user-details/{token}',[
+        'as' => 'admin.view-user-details',
+        'uses' => 'Admin\UserController@viewUser',
+    ])->middleware('checkAdmin');
+
+    Route::get('admin/suspend-user/{token}',[
+        'as' => 'admin.suspend-user',
+        'uses' => 'Admin\UserController@suspendUser',
+    ])->middleware('checkAdmin');
+
+    Route::get('admin/activate-user/{token}',[
+        'as' => 'admin.activate-user',
+        'uses' => 'Admin\UserController@activateUser',
+    ])->middleware('checkAdmin');
+
+    Route::get('admin/add-new-user',[
+        'as' => 'admin.add-new-user',
+        'uses' => 'Admin\UserController@addUser',
+    ])->middleware('checkAdmin');
+
+    Route::post('admin/submit-new-user-form',[
+        'as' => 'admin.submit-new-user-form',
+        'uses' => 'Admin\UserController@submitNewUserForm',
+    ])->middleware('checkAdmin');
+
+    // admin products functionalities
+
+    Route::get('admin/add-product-brand',[
+        'as' => 'admin.add-product-brand',
+        'uses' => 'Admin\ProductController@addProductBrand',
+    ])->middleware('checkAdmin');
+
+    Route::post('admin/edit-brand-details/{token}',[
+        'as' => 'edit-brand-details',
+        'uses' => 'Admin\ProductController@editBrand',
+    ])->middleware('checkAdmin');
+
+    Route::post('admin/create-brand',[
+        'as' => 'submit-brand-form',
+        'uses' => 'Admin\ProductController@createBrand',
+    ])->middleware('checkAdmin');
+
+    Route::get('admin/add-product-category',[
+        'as' => 'admin.add-product-category',
+        'uses' => 'Admin\ProductController@addProductCategory',
+    ])->middleware('checkAdmin');
+
+    Route::post('admin/edit-category-details/{token}',[
+        'as' => 'edit-category-details',
+        'uses' => 'Admin\ProductController@editCategory',
+    ])->middleware('checkAdmin');
+
+    Route::post('admin/create-category',[
+        'as' => 'submit-category-form',
+        'uses' => 'Admin\ProductController@createCategory',
+    ])->middleware('checkAdmin');

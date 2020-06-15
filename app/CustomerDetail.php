@@ -35,6 +35,10 @@ class CustomerDetail extends Model
         return CustomerDetail::where('user_id', Auth::user()->id)->first();
     }
 
+    public static function getUserDetailsById($user_id){
+        return CustomerDetail::where('user_id', $user_id)->first();
+    }
+
     public static function checkBalance(){
         $user_balance = CustomerDetail::where('user_id', Auth::user()->id)->first();
         return $user_balance;

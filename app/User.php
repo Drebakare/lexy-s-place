@@ -18,7 +18,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'first_name', 'last_name', 'role_id', 'email', 'password', 'DOB'
+        'first_name', 'last_name', 'role_id', 'email', 'password', 'DOB', 'store_id'
     ];
 
     /**
@@ -81,6 +81,9 @@ class User extends Authenticatable
     public function role(){
         return $this->belongsTo(Role::class);
     }
+    public function store(){
+        return $this->belongsTo(Store::class);
+    }
     public function subscriptionList(){
         return $this->hasOne(SubscriptionList::class);
     }
@@ -123,5 +126,9 @@ class User extends Authenticatable
         return User::where('role_id', 1)->OrderBy('created_at', 'desc')
             ->take(5)
             ->get();
+    }
+
+    public static function getUserByToken($token){
+        return User::where('token', $token)->first();
     }
 }

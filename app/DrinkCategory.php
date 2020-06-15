@@ -18,4 +18,14 @@ class DrinkCategory extends Model
         $categories = DrinkCategory::get();
         return $categories;
     }
+
+    public static function checkCategory($token){
+        $category = DrinkCategory::where('token', $token)->first();
+        if ($category){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
 }

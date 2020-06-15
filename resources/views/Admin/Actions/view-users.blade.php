@@ -32,8 +32,8 @@
                                     <th>Email</th>
                                     <th>First Name</th>
                                     <th>Role</th>
-                                    <th>Membership Level</th>
-                                    <th>Wallet Balance</th>
+                                    <th>Level</th>
+                                    <th>Activeness</th>
                                     <th>Created At</th>
                                     <th>Action</th>
                                 </tr>
@@ -52,30 +52,45 @@
                                             @if($user->role_id == 1)
                                                 {{$user->customerDetail->membership->membership_name}}
                                             @else
-                                                nil
+                                                Staff
                                             @endif
                                         </td>
                                         <td>
-                                            @if($user->role_id == 1)
-                                                {{$user->customerDetail->credit_balance}}
+                                            @if($user->active == 1)
+                                                Active
                                             @else
-                                                nil
+                                                Suspended
                                             @endif
                                         </td>
                                         <td>
                                             {{$user->created_at}}
                                         </td>
                                         <td>
-                                            <a href="#">
-                                                <span>
-                                                    <i class="mdi mdi-account-arrow-right mdi-24px"></i>
-                                                </span>
-                                            </a>
-                                            <a href="#">
-                                                <span>
+                                            @if($user->role_id == 1)
+                                                <a href="#edit-user-{{$key}}" data-toggle="modal" >
+                                                    <span data-toggle="tooltip" data-placement="top" title data-original-title="Edit User's Membership Level">
+                                                        <i class="mdi mdi-account-convert mdi-24px"></i>
+                                                    </span>
+                                                </a>
+                                            @endif
+                                            <a href="{{route('admin.view-user-details', ['token' => $user->token])}}">
+                                                <span data-toggle="tooltip" data-placement="top" title data-original-title="View User's Details">
                                                     <i class="mdi mdi-eye-circle mdi-24px"></i>
                                                 </span>
                                             </a>
+                                            @if($user->active == 1)
+                                                <a href="{{route('admin.suspend-user', ['token' => $user->token])}}">
+                                                    <span data-toggle="tooltip" data-placement="top" title data-original-title="Suspend User">
+                                                        <i class="mdi mdi-close-thick mdi-24px"></i>
+                                                    </span>
+                                                </a>
+                                            @else
+                                                <a href="{{route('admin.activate-user', ['token' => $user->token])}}">
+                                                    <span data-toggle="tooltip" data-placement="top" title data-original-title="Activate User">
+                                                        <i class="mdi mdi-check-outline mdi-24px"></i>
+                                                    </span>
+                                                </a>
+                                            @endif
 {{--
                                             <button class="btn btn-sm btn-outline-primary waves-effect waves-light" data-toggle="modal" data-target="#edit-store-{{$key}}"> Edit</button>
 --}}
@@ -90,41 +105,46 @@
             </div>
         </div>
     </div>
-    {{--@foreach($stores as $key => $store)
-        <div class="modal fade" id="edit-store-{{$key}}" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    @foreach($users as $key => $user)
+        <div class="modal fade" id="edit-user-{{$key}}" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title mt-0" id="mySmallModalLabel">Edit Store</h5>
+                    <h5 class="modal-title mt-0" id="mySmallModalLabel">Edit User's Membership Level</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <h4 class="card-title">Edit Store</h4>
+                    <h4 class="card-title">Edit Membership Level</h4>
                     <p class="card-title-desc">Fill all information below correct.</p>
-                    <form method="post" action="{{route('edit-store-details', ['token' => $store->token])}}">
+                    <form method="post" action="{{route('edit-membership-details', ['token' => $user->token])}}">
                         @csrf
                         <div class="row">
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label for="productname">Store Name</label>
-                                    <input id="productname" value="{{$store->store_name}}" name="store_name" type="text" class="form-control" required>
+                                    <label for="productname">User Email</label>
+                                    <input id="productname" value="{{$user->email}}" name="store_name" type="text" class="form-control" required disabled>
                                 </div>
                             </div>
-
-                            <div class="col-sm-12">
-                                <div class="form-group">
-                                    <label for="productname">Store Location</label>
-                                    <input id="productname" value="{{$store->location}}" name="location" type="text" class="form-control" required>
+                            @if($user->role_id == 1)
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <label for="productname">Change Membership Level</label>
+                                        <select name="membership_level" class="form-control" required>
+                                            @foreach($memberships as $membership)
+                                                <option value="{{$membership->id}}" @if($user->customerDetail->membership->id == $membership->id) selected @endif>{{$membership->membership_name}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
                                 </div>
-                            </div>
+                            @endif
                         </div>
-                        <button type="submit" class="btn btn-success mr-1 waves-effect waves-light">Edit Store</button>
+                        <button type="submit" class="btn btn-success mr-1 waves-effect waves-light">Edit Membership</button>
                     </form>
                 </div>
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
-    @endforeach--}}
+    @endforeach
 @endsection
