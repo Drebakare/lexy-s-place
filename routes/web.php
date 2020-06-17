@@ -298,3 +298,18 @@ use Illuminate\Support\Facades\Route;
         'as' => 'submit-category-form',
         'uses' => 'Admin\ProductController@createCategory',
     ])->middleware('checkAdmin');
+
+    Route::get('admin/add-drink-type',[
+        'as' => 'admin.add-product-type',
+        'uses' => 'Admin\ProductController@addProductType',
+    ])->middleware('checkAdmin');
+
+    Route::post('admin/create-drink-tyoe',[
+        'as' => 'submit-drinktype-form',
+        'uses' => 'Admin\ProductController@createDrinkType',
+    ])->middleware('checkAdmin');
+
+    Route::post('admin/edit-drinktype-details/{token}',[
+        'as' => 'edit-drink-details',
+        'uses' => 'Admin\ProductController@editDrinkType',
+    ])->middleware('checkAdmin');

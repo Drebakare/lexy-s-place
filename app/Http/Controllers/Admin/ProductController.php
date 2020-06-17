@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\AuditTrail;
 use App\Brand;
 use App\DrinkCategory;
+use App\DrinkType;
 use App\Http\Controllers\Controller;
 use App\Product;
 use App\Stock;
@@ -117,6 +118,78 @@ class ProductController extends Controller
         }
         catch(\Exception $exception){
             return redirect()->back()->with('failure', 'Category Details could not be Edited');
+        }
+    }
+
+    public function addProductType(){
+        $categories = DrinkCategory::get();
+        $drink_types = DrinkType::get();
+        return view('Admin.Actions.create-product-drinktype', compact('categories', 'drink_types'));
+    }
+
+    public function createDrinkType(Request $request){
+        try {
+            if($request->file('image')->getSize() > 100000 )
+            {
+                return redirect()->back()->with('failure', "Uploaded File Size is Larger than 1mb");
+            }
+            $this->validate($request, [
+                'name' => 'bail|required|unique:drink_types',
+                'drink_category' => 'bail|required'
+            ]);
+            $image_file = $request->file('image');
+            $image_name = Product::imageProcesses($image_file);
+            $new_drink_type = new DrinkType();
+            $new_drink_type->name = $request->name;
+            $new_drink_type->category_id = $request->drink_category;
+            $new_drink_type->token = Str::random(15);
+            $new_drink_type->image = $image_name;
+            $new_drink_type->save();
+
+            $action = "Created a new Drink Type called ".$new_drink_type->name;
+            AuditTrail::createLog(Auth::user()->id, $action );
+            return redirect()->back()->with('success', 'Category successfully created');
+        }
+        catch (\Exception $exception){
+            return redirect()->back()->with('failure', "Error Creating Drink Type");
+        }
+    }
+
+    public function editDrinkType(Request $request, $token){
+        try {
+            if ($request->hasFile('image')){
+                if ($request->file('image')->getSize() > 100000) {
+                    return redirect()->back()->with('failure', "Uploaded File Size is Larger than 1mb");
+                }
+            }
+            $this->validate($request, [
+                'name' => 'bail|required',
+                'drink_category' => 'bail|required',
+            ]);
+
+            $check_drink = DrinkType::checkDrink($token);
+            if ($check_drink){
+                $update_drink = DrinkType::where('token', $token)->first();
+                if ($request->hasFile('image')){
+                    $image_file = $request->file('image');
+                    $image_name = Product::imageProcesses($image_file);
+                    $update_drink->image = $image_name;
+                }
+                $update_drink->name = $request->name;
+                $update_drink->category_id = $request->drink_category;
+                $update_drink->token = Str::random(15);
+                $update_drink->save();
+                $action = "Updated Drink Type Details to ".$update_drink->name;
+                AuditTrail::createLog(Auth::user()->id, $action );
+
+                return redirect()->back()->with('success', 'Drink Type Details successfully created');
+            }
+            else{
+                return redirect()->back()->with('failure', 'Drink Type Details does not Exist');
+            }
+        }
+        catch(\Exception $exception){
+            return redirect()->back()->with('failure', 'Drink Type Details could not be Edited');
         }
     }
 }

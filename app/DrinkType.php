@@ -20,4 +20,14 @@ class DrinkType extends Model
     public static function getAllCategories(){
         return DrinkType::get();
     }
+
+    public static function checkDrink($token){
+        $drink = DrinkType::where('token', $token)->first();
+        if ($drink){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
 }

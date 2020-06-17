@@ -3,6 +3,9 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use Intervention\Image\Facades\Image;
 
 class Product extends Model
 {
@@ -176,6 +179,14 @@ class Product extends Model
         })->where('alcoholic', $value)->inRandomOrder()->paginate(3);
         //return result
         return $products;
+    }
+
+    public static function imageProcesses($image){
+        $img = Image::make($image)->resize(115, 115);
+        $image_name = Str::random(10).'.'.$image->getClientOriginalExtension();
+        $path = public_path().'/_landing/assets/images/products/'.$image_name;
+        $img->save($path);
+        return $image_name;
     }
 
 }
