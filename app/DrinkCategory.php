@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class DrinkCategory extends Model
 {
@@ -28,4 +29,15 @@ class DrinkCategory extends Model
             return false;
         }
     }
+   public static function updateCategoryDetails($request, $token){
+       $category = DrinkCategory::where('token', $token)->update([
+           'name' => $request->name,
+       ]);
+       if ($category){
+           return true;
+       }
+       else{
+           return false;
+       }
+   }
 }

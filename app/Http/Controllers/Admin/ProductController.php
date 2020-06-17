@@ -81,6 +81,7 @@ class ProductController extends Controller
             $new_category = new DrinkCategory();
             $new_category->name = $request->name;
             $new_category->token = Str::random(15);
+            $new_category->category_image = "Default.png";
             $new_category->save();
             //log action
             $action = "Created a new Category called ".$new_category->name;
@@ -100,22 +101,22 @@ class ProductController extends Controller
         try {
             $check_category = DrinkCategory::checkCategory($token);
             if ($check_category){
-                $update_brand = Brand::updatebrandDetails($request, $token);
-                if ($update_brand){
-                    $action = "Updated Brand to ".$request->brand_name;
+                $update_category = DrinkCategory::updateCategoryDetails($request, $token);
+                if ($update_category){
+                    $action = "Updated Category Details to ".$request->name;
                     AuditTrail::createLog(Auth::user()->id, $action );
-                    return redirect()->back()->with('success', 'Brand Details Successfully Updated');
+                    return redirect()->back()->with('success', 'Category Details Successfully Updated');
                 }
                 else{
-                    return redirect()->back()->with('failure', 'Brand could not be Updated');
+                    return redirect()->back()->with('failure', 'Category Details could not be Updated');
                 }
             }
             else{
-                return redirect()->back()->with('failure', 'Brand does not Exist');
+                return redirect()->back()->with('failure', 'Category Details does not Exist');
             }
         }
         catch(\Exception $exception){
-            return redirect()->back()->with('failure', 'Brand could not be Edited');
+            return redirect()->back()->with('failure', 'Category Details could not be Edited');
         }
     }
 }

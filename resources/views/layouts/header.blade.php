@@ -14,7 +14,8 @@
                             <li><a href="{{route('user.dashboard')}}">My account</a></li>
                             <li><a href="{{route('cart.checkout')}}">Checkout</a></li>
                             <li><a href="{{route('user.book-room')}}">Book Room</a></li>
-                            <li><a href="#store_session_form" data-toggle="modal" data-target="#store_session_form">Change Store</a></li>
+                            <li><a href="#store_session_form" data-toggle="modal" data-target="#store_session_form">Change Store</a>
+                            </li>
                         </ul>
                     </div>
                     <!-- end of header top menu -->
@@ -35,6 +36,7 @@
                     <div class="logo mt-20 mb-10">
                         <a href="{{route('homepage')}}">
                             <h2 style="color: #80bb01">Lexy's Place</h2>
+                            <span>@if(session()->get('check_store_session')) ( {{\App\Store::where('id', session()->get('check_store_session'))->first()->store_name}} ) @endif</span>
                         </a>
                     </div>
                     <!-- end of logo -->
