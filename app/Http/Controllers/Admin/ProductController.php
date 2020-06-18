@@ -192,4 +192,110 @@ class ProductController extends Controller
             return redirect()->back()->with('failure', 'Drink Type Details could not be Edited');
         }
     }
+
+    public function addProduct(){
+        $products = Product::get();
+        $brands = Brand::getAllBrands();
+        $drink_types = DrinkType::get();
+        return view('Admin.Actions.add-product', compact('products', 'brands', 'drink_types'));
+    }
+
+    public function submitProductForm(Request $request){
+        try {
+            if($request->file('image')->getSize() > 100000 )
+            {
+                return redirect()->back()->with('failure', "Uploaded File Size is Larger than 1mb");
+            }
+            $this->validate($request, [
+                'name' => 'bail|required|unique:products',
+                'brand' => 'bail|required',
+                'drink_type' => 'bail|required',
+                'price' => 'bail|required',
+                'isalcoholic' => 'bail|required',
+                'hasempty' => 'bail|required',
+                'description' => 'bail|required',
+            ]);
+            $image_file = $request->file('image');
+            $image_name = Product::imageProcesses($image_file, 700, 700);
+            $new_product = new Product();
+            $new_product->name = $request->name;
+            $new_product->brand_id = $request->brand;
+            $new_product->drink_type_id = $request->drink_type;
+            $new_product->price= $request->price;
+            $new_product->alcoholic= $request->isalcoholic;
+            $new_product->has_empty= $request->hasempty;
+            $new_product->description= $request->description;
+            $new_product->token = Str::random(15);
+            $new_product->image = $image_name;
+            $new_product->save();
+
+            $action = "Created a new Product called ".$new_product->name;
+            AuditTrail::createLog(Auth::user()->id, $action );
+            // add product to stock
+            $stores = Store::get();
+            foreach ($stores as $store){
+                $new_stock = new Stock();
+                $new_stock->product_id = $new_product->id;
+                $new_stock->qty = 0;
+                $new_stock->empties = 0;
+                $new_stock->token = Str::random(15);
+                $new_stock->store_id = $store->id;
+                $new_stock->save();
+                $action = "Added ".$new_product->name. " to Stock";
+                AuditTrail::createLog(Auth::user()->id, $action );
+            }
+
+            return redirect()->back()->with('success', 'Product successfully created');
+        }
+        catch (\Exception $exception){
+            return redirect()->back()->with('failure', "Error Creating Product");
+        }
+    }
+
+    public function editProductDetails(Request $request, $token){
+        try {
+            if ($request->hasFile('image')){
+                if($request->file('image')->getSize() > 100000 ) {
+                    return redirect()->back()->with('failure', "Uploaded File Size is Larger than 1mb");
+                }
+            }
+            $this->validate($request, [
+                'name' => 'bail|required',
+                'brand' => 'bail|required',
+                'drink_type' => 'bail|required',
+                'price' => 'bail|required',
+                'isalcoholic' => 'bail|required',
+                'hasempty' => 'bail|required',
+                'description' => 'bail|required',
+            ]);
+            $product = Product::getProduct($token);
+            if ($product){
+                if ($request->hasFile('image')){
+                    $image_file = $request->file('image');
+                    $image_name = Product::imageProcesses($image_file, 700, 700);
+                    $product->image = $image_name;
+                }
+                $product->name = $request->name;
+                $product->brand_id = $request->brand;
+                $product->drink_type_id = $request->drink_type;
+                $product->price= $request->price;
+                $product->alcoholic= $request->isalcoholic;
+                $product->has_empty= $request->hasempty;
+                $product->description= $request->description;
+                $product->token = Str::random(15);
+                $product->save();
+
+                $action = "Edited Product to ".$product->name;
+                AuditTrail::createLog(Auth::user()->id, $action);
+
+                return redirect()->back()->with('success', 'Product Successfully Edited');
+            }
+            else{
+                return redirect()->back()->with('failure', 'Product does not Exist');
+            }
+        }
+        catch (\Exception $exception){
+            return redirect()->back()->with('failure', "Error Editing Product");
+        }
+    }
 }

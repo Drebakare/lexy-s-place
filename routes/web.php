@@ -313,3 +313,18 @@ use Illuminate\Support\Facades\Route;
         'as' => 'edit-drink-details',
         'uses' => 'Admin\ProductController@editDrinkType',
     ])->middleware('checkAdmin');
+
+    Route::get('admin/add-product',[
+        'as' => 'admin.add-new-product',
+        'uses' => 'Admin\ProductController@addProduct',
+    ])->middleware('checkAdmin');
+
+    Route::post('admin/submit-product-form',[
+        'as' => 'submit-product-form',
+        'uses' => 'Admin\ProductController@submitProductForm',
+    ])->middleware('checkAdmin');
+
+    Route::post('admin/edit-product-details/{token}',[
+        'as' => 'edit-product-details',
+        'uses' => 'Admin\ProductController@editProductDetails',
+    ])->middleware('checkAdmin');

@@ -48,7 +48,7 @@
                         <li><a href="{{route('admin.add-product-brand')}}">Add Product Brand</a></li>
                         <li><a href="{{route('admin.add-product-category')}}">Add Product Categories </a></li>
                         <li><a href="{{route('admin.add-product-type')}}">Add Product Type </a></li>
-                        <li><a href="{{route('admin.add-new-user')}}">Add Product </a></li>
+                        <li><a href="{{route('admin.add-new-product')}}">Add Product </a></li>
                     </ul>
                 </li>
                 <li class="d-none">

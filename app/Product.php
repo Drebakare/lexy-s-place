@@ -181,8 +181,8 @@ class Product extends Model
         return $products;
     }
 
-    public static function imageProcesses($image){
-        $img = Image::make($image)->resize(115, 115);
+    public static function imageProcesses($image, $width = 115, $height = 115){
+        $img = Image::make($image)->resize($width, $height);
         $image_name = Str::random(10).'.'.$image->getClientOriginalExtension();
         $path = public_path().'/_landing/assets/images/products/'.$image_name;
         $img->save($path);
