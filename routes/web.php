@@ -340,3 +340,8 @@ use Illuminate\Support\Facades\Route;
         'as' => 'order.fetch-stock',
         'uses' => 'Admin\OrderController@fetchStock',
     ])->middleware('checkAdmin');
+
+    Route::post('user/raise-order',[
+        'as' => 'user.raise-order',
+        'uses' => 'Admin\OrderController@userRaiseOrder',
+    ])->middleware('checkAdmin');

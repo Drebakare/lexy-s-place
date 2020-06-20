@@ -28,7 +28,7 @@
                                         <div class="row">
                                             <div class="col-sm-4">
                                                 <div class="form-group">
-                                                    <label class="control-label">Store</label>
+                                                    <label class="control-label">Products List</label>
                                                     <select name="store" id="products-list" class="form-control select2" >
                                                         <option value="" selected disabled>Select Product</option>
                                                         @foreach($products as $product)
@@ -76,7 +76,25 @@
                                                             </tr>
                                                         </tbody>
                                                     </table>
-                                                    <button type="submit" class="mt-3 btn btn-outline-success mr-1 waves-effect waves-light">Process Order</button>
+                                                </div>
+                                                <div class="row mt-5">
+                                                    <div class="col-sm-6">
+                                                        <div class="form-group">
+                                                            <label class="control-label">Store</label>
+                                                            <select name="store" id="products-list" class="form-control select2" >
+                                                                <option value="" selected disabled>Select Product</option>
+                                                                @foreach($tables as $table)
+                                                                    <option value="{{$table->id}}">{{$table->table_name}}</option>
+                                                                @endforeach
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-6 mt-2">
+                                                        <div class="form-group">
+                                                            <button type="button" id="complete-sales" class="mt-3 btn btn-outline-success mr-1 waves-effect waves-light">Complete Sales</button>
+                                                        </div>
+                                                    </div>
+
                                                 </div>
                                                 <!-- end table-responsive -->
                                             </div>
@@ -218,6 +236,7 @@
     </div><!-- /.modal -->
     @endforeach--}}
     <meta name="_token" content="{{ app('Illuminate\Encryption\Encrypter')->encrypt(csrf_token()) }}" />
+    <meta name="_token" content="{{ app('Illuminate\Encryption\Encrypter')->encrypt(csrf_token()) }}" />
 @endsection
 @section('script_contents')
     <script type="text/javascript">
@@ -244,68 +263,111 @@
             $('button#add-product-btn').on('click',function () {
                 let product_id = $('select#products-list').val();
                 let qty = $('input#buy-qty').val();
-                if (product_id != null && qty != null){
-                    $('button#add-product-btn').attr('disabled', true);
-                    let selected_product = product_app[product_id];
-                    if (cart.length == 0){
-                        let product_data = {
-                            token: selected_product.token,
-                            name: selected_product.name,
-                            quantity: qty,
-                            price: selected_product.price
-                        }
-                        cart.push(product_data);
-                        let total = 0
-                        for (let i = 0 ; i < cart.length; i++){
-                            total = total + cart[i].price * cart[i].quantity;
-                            let html ='<tr id="product-'+1+'"><th>' + cart[i].name + '</th>'
+                if (product_id != null){
+                    if (qty !== ""){
+                        $('button#add-product-btn').attr('disabled', true);
+                        let selected_product = product_app[product_id];
+                        if (cart.length == 0){
+                            let product_data = {
+                                product_id:selected_product.id,
+                                token: selected_product.token,
+                                name: selected_product.name,
+                                quantity: qty,
+                                price: selected_product.price
+                            }
+                            cart.push(product_data);
+                            let total = 0
+                            for (let i = 0 ; i < cart.length; i++){
+                                let new_cart = cart[i].token
+                                let functionCall = 'remove_product('+cart[i].token+')';
+                                total = total + cart[i].price * cart[i].quantity;
+                                let html ='<tr id="product-'+i+'"><th>' + cart[i].name + '</th>'
                                 html+='<th>' + cart[i].quantity + '</th>'
                                 html+='<th>' + cart[i].price + '</th>'
                                 html +='<th>' + cart[i].price * cart[i].quantity + '</th>'
+                                html +='<th><button class="btn btn-sm btn-outline-danger" id="please-print-me" value="'+cart[i].token +'" >Delete</button></th>'
                                 html +='</tr>'
                                 $(html).insertAfter('#summary-title');
+                            }
+                            $('th#total-price').html(total)
+                            toastr.success('Product Successfully Added');
+                            $('button#add-product-btn').attr('disabled', false);
                         }
-                        $('th#total-price').html(total)
-                        toastr.success('Product Successfully Added');
-                        $('button#add-product-btn').attr('disabled', false);
+                        else{
+                            for (let i = 0 ; i < cart.length; i++){
+                                if (cart[i].token === selected_product.token){
+                                    toastr.error('Product Already Exist')
+                                    $('button#add-product-btn').attr('disabled', false);
+                                    return
+                                }
+                            }
+                            let product_data = {
+                                product_id:selected_product.id,
+                                token: selected_product.token,
+                                name: selected_product.name,
+                                quantity: qty,
+                                price: selected_product.price
+                            }
+                            cart.push(product_data);
+                            let total = 0
+                            for(let k = 0; k < cart.length; k++){
+                                $('tr#product-'+k+'').remove()
+                            }
+                            for (let i = 0 ; i < cart.length; i++){
+                                total = total + cart[i].price * cart[i].quantity;
+                                let html ='<tr id="product-'+i+'"><th>' + cart[i].name + '</th>'
+                                html+='<th>' + cart[i].quantity + '</th>'
+                                html+='<th>' + cart[i].price + '</th>'
+                                html +='<th>' + cart[i].price * cart[i].quantity + '</th>'
+                                html +='<th><button class="btn btn-sm btn-outline-danger" id="please-print-me" value="'+cart[i].token +'" >Delete</button></th>'
+                                html +='</tr>'
+                                $(html).insertAfter('#summary-title');
+                            }
+                            $('th#total-price').html(total)
+                            toastr.success('Product Successfully Added');
+                            $('button#add-product-btn').attr('disabled', false);
+                            console.log(cart);
+                        }
                     }
                     else{
-                        for (let i = 0 ; i < cart.length; i++){
-                            if (cart[i].token === selected_product.token){
-                                toastr.error('Product Already Exist')
-                                $('button#add-product-btn').attr('disabled', false);
-                                return
-                            }
-                        }
-                        let product_data = {
-                            token: selected_product.token,
-                            name: selected_product.name,
-                            quantity: qty,
-                            price: selected_product.price
-                        }
-                        cart.push(product_data);
-                        let total = 0
-                        for(let k = 0; k < cart.length; k++){
-                            $('tr#product-'+k+'').remove()
-                        }
-                        for (let i = 0 ; i < cart.length; i++){
-                            total = total + cart[i].price * cart[i].quantity;
-                            let html ='<tr id="product-'+1+'"><th>' + cart[i].name + '</th>'
-                            html+='<th>' + cart[i].quantity + '</th>'
-                            html+='<th>' + cart[i].price + '</th>'
-                            html +='<th>' + cart[i].price * cart[i].quantity + '</th>'
-                            html +='</tr>'
-                            $(html).insertAfter('#summary-title');
-                        }
-                        $('th#total-price').html(total)
-                        toastr.success('Product Successfully Added');
-                        $('button#add-product-btn').attr('disabled', false);
-                        console.log(cart);
+                        toastr.error("Qty Field Must not be Empty");
                     }
                 }
                 else{
-                    toastr.error("No Product or Qty is Selected");
+                    toastr.error("No Product is Selected");
                 }
+            })
+            $(document).on('click',"#please-print-me", function() {
+                value = $(this).val();
+                for(let k = 0; k < cart.length; k++){
+                    $('tr#product-'+k+'').remove()
+                }
+                for(let p = 0; p<cart.length; p++){
+                    if (cart[p].token === value){
+                        cart.splice(p,1)
+                        break
+                    }
+                }
+                let total = 0
+                for (let i = 0 ; i < cart.length; i++){
+                    total = total + cart[i].price * cart[i].quantity;
+                    let html ='<tr id="product-'+i+'"><th>' + cart[i].name + '</th>'
+                    html+='<th>' + cart[i].quantity + '</th>'
+                    html+='<th>' + cart[i].price + '</th>'
+                    html +='<th>' + cart[i].price * cart[i].quantity + '</th>'
+                    html +='<th><button class="btn btn-sm btn-outline-danger" id="please-print-me" value="'+cart[i].token +'" >Delete</button></th>'
+                    html +='</tr>'
+                    $(html).insertAfter('#summary-title');
+                }
+                $('th#total-price').html(total)
+                toastr.success('Product Successfully Added');
+            })
+            $('button#complete-sales').on('click', function () {
+                if(cart.length === 0){
+                    toastr.error('No Product Has Been Added to Order Summary')
+                    return
+                }
+                completeSales(cart);
             })
             function fetchStockDetails(product_id, store) {
                 $.ajaxSetup({
@@ -329,6 +391,36 @@
                         if(stock.status){
                             $('input#stock-qty').val(stock.data)
                             $('button#add-product-btn').attr('disabled', false);
+                            toastr.success(stock.msg);
+                        }
+                        else{
+                            toastr.error(stock.msg);
+                        }
+                    },
+                    failure: function (stock) {
+                        console.log(stock);
+                    }
+                });
+            }
+            function completeSales(new_cart) {
+                $.ajaxSetup({
+                    headers: {
+                        'X-XSRF-Token': $('meta[name="_token"]').attr('content')
+                    }
+                });
+                var data =  {
+                    sales: new_cart,
+                    _token: '{!! csrf_token() !!}',
+                }
+                $.ajax({
+                    url: "{{route('user.raise-order') }}",
+                    method: 'POST',
+                    contentType:"application/json",
+                    dataType: "json",
+                    data: JSON.stringify(data),
+                    cache: false,
+                    success: function(stock){
+                        if(stock.status){
                             toastr.success(stock.msg);
                         }
                         else{
