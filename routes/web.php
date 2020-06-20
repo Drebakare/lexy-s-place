@@ -328,3 +328,15 @@ use Illuminate\Support\Facades\Route;
         'as' => 'edit-product-details',
         'uses' => 'Admin\ProductController@editProductDetails',
     ])->middleware('checkAdmin');
+
+    //Order Modules
+
+    Route::get('admin/raise-order',[
+        'as' => 'admin.raise-order',
+        'uses' => 'Admin\OrderController@raiseOrder',
+    ])->middleware('checkAdmin');
+
+    Route::post('fetch-stock',[
+        'as' => 'order.fetch-stock',
+        'uses' => 'Admin\OrderController@fetchStock',
+    ])->middleware('checkAdmin');

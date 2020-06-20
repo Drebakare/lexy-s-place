@@ -189,4 +189,20 @@ class Product extends Model
         return $image_name;
     }
 
+    public static function getAgentProducts($store_id = null){
+        if ($store_id != null){
+            $products = Product::whereHas('stocks', function($query) use ($store_id){
+                $query->where('qty','>' , 0)
+                    ->where('store_id', $store_id);
+            })->inRandomOrder()->get();
+            return $products;
+        }
+        else{
+            $products = Product::whereHas('stocks', function($query) use ($store_id){
+                $query->where('qty','>' , 0);
+            })->inRandomOrder()->get();
+            return $products;
+        }
+
+    }
 }

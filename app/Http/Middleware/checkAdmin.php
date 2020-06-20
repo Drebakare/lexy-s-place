@@ -16,12 +16,16 @@ class checkAdmin
      */
     public function handle($request, Closure $next)
     {
-        if (Auth::check() && Auth::user()->role_id == 2){
-            return $next($request);
+        if (Auth::check()){
+            if (Auth::user()->role_id == 1){
+                return redirect(route('homepage'))->with('failure', 'Unauthorized Access');
+            }
+            else{
+                return $next($request);
+            }
         }
         else{
             return redirect(route('homepage'))->with('failure', 'Unauthorized Access');
         }
-
     }
 }

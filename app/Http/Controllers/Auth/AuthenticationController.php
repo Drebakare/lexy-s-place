@@ -66,10 +66,12 @@ class AuthenticationController extends Controller
                             return redirect(route('user.dashboard'))->with('success', 'Login Successful');
                             break;
                         }
-                        break;
-                    case 2:
+                    /*case 2:
                         return redirect(route('admin.dashboard'))->with('success', 'Login Successful');
                         break;
+                    case 3:
+                        return redirect(route('admin.dashboard'))->with('success', 'Login Successful');
+                        break;*/
                     default:
                         return redirect(route('admin.dashboard'))->with('success', 'Login Successful');
                 }
@@ -116,11 +118,11 @@ class AuthenticationController extends Controller
                             break;
                         }
                         break;
-                    case 2:
+                    /*case 2:
                         return redirect(route('admin.dashboard'))->with('success', 'Login Successful');
-                        break;
+                        break;*/
                     default:
-                        return redirect(route('user.dashboard'))->with('success', 'Login Successful');
+                        return redirect(route('admin.dashboard'))->with('success', 'Login Successful');
                 }
             }
             else{
@@ -256,9 +258,9 @@ class AuthenticationController extends Controller
                                 break;
                             }
                             break;
-                        case 2:
+                        /*case 2:
                             return redirect(route('admin.dashboard'))->with('success', 'Login Successful');
-                            break;
+                            break;*/
                         default:
                             return redirect(route('admin.dashboard'))->with('success', 'Login Successful');
                     }

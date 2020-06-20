@@ -152,6 +152,10 @@
 
     <script src="{{asset('_admin/assets/libs/bs-custom-file-input/bs-custom-file-input.min.js')}}"></script>    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     <script src="{{asset('_admin/assets/js/pages/form-element.init.js')}}"></script>
+
+    <script src="{{asset('_admin/assets/libs/jquery.repeater/jquery.repeater.min.js')}}"></script>
+
+    <script src="{{asset('_admin/assets/js/pages/form-repeater.int.js')}}"></script>
     <script type="text/javascript">
     @if(session('failure'))
       toastr.error('{{session("failure")}}');
