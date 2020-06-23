@@ -345,3 +345,28 @@ use Illuminate\Support\Facades\Route;
         'as' => 'user.raise-order',
         'uses' => 'Admin\OrderController@userRaiseOrder',
     ])->middleware('checkAdmin');
+
+    Route::get('admin/view-orders',[
+        'as' => 'admin.view-orders',
+        'uses' => 'Admin\OrderController@viewOrders',
+    ])->middleware('checkAdmin');
+
+    Route::get('admin/view-order-details/{token}',[
+        'as' => 'admin.view-order-details',
+        'uses' => 'Admin\OrderController@viewOrderDetails',
+    ])->middleware('checkAdmin');
+
+    Route::get('admin/view-all-orders',[
+        'as' => 'admin.view-all-orders',
+        'uses' => 'Admin\OrderController@viewallOrders',
+    ])->middleware('checkAdmin');
+
+    Route::get('admin/activate-order/{token}',[
+            'as' => 'admin.activate-order',
+            'uses' => 'Admin\OrderController@activateOrder',
+        ])->middleware('checkAdmin');
+
+    Route::get('admin/print-order-details/{token}',[
+            'as' => 'admin.print-order-details',
+            'uses' => 'Admin\OrderController@printOrderDetails',
+        ])->middleware('checkAdmin');

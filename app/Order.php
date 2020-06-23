@@ -9,12 +9,15 @@ class Order extends Model
 {
     protected $fillable = [
         'user_id', 'receipt_no', 'status' , 'total_price', 'table_id',
-        'voucher_id', 'membership_id',  'token'
+        'voucher_id', 'membership_id',  'token', 'activated_by'
     ];
     public function user(){
         return $this->belongsTo(User::class);
     }
-    public function table_id(){
+    public function activatedBy(){
+        return $this->belongsTo(User::class, 'activated_by');
+    }
+    public function table(){
         return $this->belongsTo(Table::class);
     }
     public function voucher(){
@@ -48,5 +51,12 @@ class Order extends Model
     }
     public static function getFinishedOrders(){
         return Order::where('status', '1')->get();
+    }
+    public static function calculateTotalSalePrice($sales){
+        $total = 0;
+        foreach ($sales as $sale){
+            $total = $total + ($sale['quantity'] * $sale['price']);
+        }
+        return $total;
     }
 }

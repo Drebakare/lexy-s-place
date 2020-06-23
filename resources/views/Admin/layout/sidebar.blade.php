@@ -58,9 +58,8 @@
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
                         <li><a href="{{route('admin.raise-order')}}">Raise Order</a></li>
-                        <li><a href="{{route('admin.add-product-category')}}">Add Product Categories </a></li>
-                        <li><a href="{{route('admin.add-product-type')}}">Add Product Type </a></li>
-                        <li><a href="{{route('admin.add-new-product')}}">Add Product </a></li>
+                        <li><a href="{{route('admin.view-orders')}}">My Orders</a></li>
+                        <li><a href="{{route('admin.view-all-orders')}}">All Orders</a></li>
                     </ul>
                 </li>
                 <li class="d-none">

@@ -51,8 +51,15 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                            <div class="col-sm-4">
+                                                <div class="form-group">
+                                                    <button type="submit" id="add-product-btn" class="btn btn-outline-primary mr-1 waves-effect waves-light">Add Product</button>
+                                                    <div class="spinner-border text-info pt-2" role="status" id="spinner-show">
+                                                        <span class="sr-only">Loading...</span>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <button type="submit" id="add-product-btn" class="btn btn-outline-primary mr-1 waves-effect waves-light">Add Product</button>
                                     </div>
                                     <div class="col-sm-6">
                                         <div class="card">
@@ -77,21 +84,24 @@
                                                         </tbody>
                                                     </table>
                                                 </div>
-                                               {{-- <div class="row mt-5">
+                                                <div class="row mt-5">
                                                     <div class="col-sm-6">
                                                         <div class="form-group">
-                                                            <label class="control-label">Store</label>
-                                                            <select name="store" id="products-list" class="form-control select2" >
-                                                                <option value="" selected disabled>Select Product</option>
+                                                            <label class="control-label">Table</label>
+                                                            <select name="store" id="table-list" class="form-control select2" >
+                                                                <option value="" selected disabled>Select Table</option>
                                                                 @foreach($tables as $table)
                                                                     <option value="{{$table->id}}">{{$table->table_name}}</option>
                                                                 @endforeach
                                                             </select>
                                                         </div>
-                                                    </div>--}}
+                                                    </div>
                                                     <div class="col-sm-6 mt-2">
                                                         <div class="form-group">
                                                             <button type="button" id="complete-sales" class="mt-3 btn btn-outline-success mr-1 waves-effect waves-light">Complete Sales</button>
+                                                            <div class="spinner-border text-info pt-2" role="status" id="payment-spinner">
+                                                                <span class="sr-only">Loading...</span>
+                                                            </div>
                                                         </div>
                                                     </div>
 
@@ -241,6 +251,8 @@
 @section('script_contents')
     <script type="text/javascript">
         $(window).on('load', function () {
+            $('#spinner-show').css('display' , 'none')
+            $('#payment-spinner').css('display' , 'none')
             var app = @json($products);
             var product_app = {}
             for (let j=app.length-1; j >= 0; j--){
@@ -251,16 +263,19 @@
             var cart = [];
             var store_id = {{Auth::user()->store_id}};
             $('select#products-list').on('change', function () {
+                $('#spinner-show').css('display' , 'block')
                 let product_id = $('select#products-list').val();
                 if (product_id != null){
                     $('button#add-product-btn').attr('disabled', true);
                     fetchStockDetails(product_id,store_id)
                 }
                 else{
+                    $('#spinner-show').css('display' , 'none')
                     toastr.error("No Product is Selected");
                 }
             })
             $('button#add-product-btn').on('click',function () {
+                $('#spinner-show').css('display' , 'block')
                 let product_id = $('select#products-list').val();
                 let qty = $('input#buy-qty').val();
                 if (product_id != null){
@@ -292,11 +307,13 @@
                             $('th#total-price').html(total)
                             toastr.success('Product Successfully Added');
                             $('button#add-product-btn').attr('disabled', false);
+                            $('#spinner-show').css('display' , 'none')
                         }
                         else{
                             for (let i = 0 ; i < cart.length; i++){
                                 if (cart[i].token === selected_product.token){
                                     toastr.error('Product Already Exist')
+                                    $('#spinner-show').css('display' , 'none')
                                     $('button#add-product-btn').attr('disabled', false);
                                     return
                                 }
@@ -325,8 +342,8 @@
                             }
                             $('th#total-price').html(total)
                             toastr.success('Product Successfully Added');
+                            $('#spinner-show').css('display' , 'none')
                             $('button#add-product-btn').attr('disabled', false);
-                            console.log(cart);
                         }
                     }
                     else{
@@ -335,6 +352,7 @@
                 }
                 else{
                     toastr.error("No Product is Selected");
+                    $('#spinner-show').css('display' , 'none')
                 }
             })
             $(document).on('click',"#please-print-me", function() {
@@ -363,11 +381,18 @@
                 toastr.success('Product Successfully Added');
             })
             $('button#complete-sales').on('click', function () {
-                if(cart.length === 0){
-                    toastr.error('No Product Has Been Added to Order Summary')
+                $('button#add-product-btn').attr('disabled', true);
+                $('button#complete-sales').attr('disabled', true);
+                $('#payment-spinner').css('display' , 'block')
+                let table_id = $('#table-list').val();
+                if(cart.length === 0 || table_id === null){
+                    toastr.error('Ensure You Add Product(s) to Cart and Select Customer Table Before Proceeding')
+                    $('#payment-spinner').css('display' , 'none')
                     return
                 }
-                completeSales(cart);
+                else{
+                    completeSales(cart,table_id);
+                }
             })
             function fetchStockDetails(product_id, store) {
                 $.ajaxSetup({
@@ -390,6 +415,7 @@
                     success: function(stock){
                         if(stock.status){
                             $('input#stock-qty').val(stock.data)
+                            $('#spinner-show').css('display' , 'none')
                             $('button#add-product-btn').attr('disabled', false);
                             toastr.success(stock.msg);
                         }
@@ -402,13 +428,14 @@
                     }
                 });
             }
-            function completeSales(new_cart) {
+            function completeSales(new_cart, table_id) {
                 $.ajaxSetup({
                     headers: {
                         'X-XSRF-Token': $('meta[name="_token"]').attr('content')
                     }
                 });
                 var data =  {
+                    table_id: table_id,
                     sales: new_cart,
                     _token: '{!! csrf_token() !!}',
                 }
@@ -419,12 +446,22 @@
                     dataType: "json",
                     data: JSON.stringify(data),
                     cache: false,
-                    success: function(stock){
-                        if(stock.status){
-                            toastr.success(stock.msg);
+                    success: function(Result){
+                        if(Result.status){
+                            $('th#total-price').html(0)
+                            toastr.success(Result.msg);
+                            for(let k = 0; k < cart.length; k++){
+                                $('tr#product-'+k+'').remove()
+                            }
+                            for(let p = 0; p<cart.length; p++){
+                                cart.splice(p,1)
+                            }
+                            $('button#add-product-btn').attr('disabled', false);
+                            $('button#complete-sales').attr('disabled', false);
+                            $('#payment-spinner').css('display' , 'none')
                         }
                         else{
-                            toastr.error(stock.msg);
+                            toastr.error(Result.msg);
                         }
                     },
                     failure: function (stock) {
