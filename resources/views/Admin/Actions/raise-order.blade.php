@@ -77,7 +77,7 @@
                                                         </tbody>
                                                     </table>
                                                 </div>
-                                                <div class="row mt-5">
+                                               {{-- <div class="row mt-5">
                                                     <div class="col-sm-6">
                                                         <div class="form-group">
                                                             <label class="control-label">Store</label>
@@ -88,7 +88,7 @@
                                                                 @endforeach
                                                             </select>
                                                         </div>
-                                                    </div>
+                                                    </div>--}}
                                                     <div class="col-sm-6 mt-2">
                                                         <div class="form-group">
                                                             <button type="button" id="complete-sales" class="mt-3 btn btn-outline-success mr-1 waves-effect waves-light">Complete Sales</button>
