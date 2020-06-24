@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\AuditTrail;
 use App\Http\Controllers\Controller;
 use App\Order;
 use App\OrderSummary;
 use App\Product;
 use App\Stock;
+use App\Store;
 use App\Table;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -142,6 +144,66 @@ class OrderController extends Controller
         }
         else{
             return redirect()->back()->with('failure', 'Order Does not Exist');
+        }
+    }
+
+    public function viewActivatedOrders(){
+        $orders = Order::where(['activated_by' => Auth::user()->id, 'order_status' => 1])->get();
+        return view('Admin.Actions.my-activated-orders', compact('orders'));
+    }
+
+    public function viewTables(){
+        if (Auth::user()->store_id == null){
+            $tables = Table::get();
+        }
+        else{
+            $tables = Table::where(['store_id' => Auth::user()->store_id])->get();
+        }
+        return view('Admin.Actions.create-tables', compact('tables'));
+    }
+
+    public function createTable(Request $request){
+        $this->validate($request, [
+            'table_name' => 'bail|required|unique:tables',
+        ]);
+        try {
+            //create a new store
+            $new_table = new Table();
+            $new_table->table_name = $request->table_name;
+            $new_table->token = Str::random(15);
+            $new_table->store_id = Auth::user()->store_id;
+            $new_table->save();
+            //log action
+            $action = "Created a new Table called ".$new_table->table_name;
+            AuditTrail::createLog(Auth::user()->id, $action);
+            return redirect()->back()->with('success', 'Table successfully created');
+        }
+        catch(\Exception $exception){
+            return redirect()->back()->with('failure', 'Table could not be created');
+        }
+    }
+
+    public function editTable(Request $request, $token){
+        $this->validate($request, [
+            'table_name' => 'bail|required',
+        ]);
+        try {
+            $check_table = Table::where('token', $token)->first();
+            if ($check_table){
+                $check_table->table_name = $request->table_name;
+                $check_table->token = Str::random(15);
+                $check_table->save();
+
+                $action = "Updated Table to ".$request->table_name;
+                AuditTrail::createLog(Auth::user()->id, $action );
+                return redirect()->back()->with('success', 'Table Details Successfully Updated');
+            }
+            else{
+                return redirect()->back()->with('failure', 'Table does not Exist');
+            }
+        }
+        catch(\Exception $exception){
+            return redirect()->back()->with('failure', 'Table could not be Edited');
         }
     }
 }

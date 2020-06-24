@@ -7,11 +7,11 @@
             <div class="row">
                 <div class="col-12">
                     <div class="page-title-box d-flex align-items-center justify-content-between">
-                        <h4 class="mb-0 font-size-18">Create Store</h4>
+                        <h4 class="mb-0 font-size-18">Create Table</h4>
                         <div class="page-title-right">
                             <ol class="breadcrumb m-0">
                                 <li class="breadcrumb-item"><a href="{{route('admin.dashboard')}}">Dashboards</a></li>
-                                <li class="breadcrumb-item active">Create Store</li>
+                                <li class="breadcrumb-item active">Create Table</li>
                             </ol>
                         </div>
                     </div>
@@ -22,27 +22,19 @@
                     <div class="card">
                         <div class="card-body">
 
-                            <h4 class="card-title">Add a New Store</h4>
-                            <p class="card-title-desc">Fill all information below. Ensure all fields are filled Properly as deleting will not be possible after add new store</p>
-                            <form method="post" action="{{route('submit-store-form')}}">
+                            <h4 class="card-title">Add a New Table</h4>
+                            <p class="card-title-desc">Fill all information below. Ensure all fields are filled Properly as deleting will not be possible after adding a new table</p>
+                            <form method="post" action="{{route('submit-table-form')}}">
                                 @csrf
                                 <div class="row">
                                     <div class="col-sm-6">
                                         <div class="form-group">
-                                            <label for="productname">Store Name</label>
-                                            <input id="productname" name="store_name" type="text" class="form-control" required>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-sm-6">
-                                        <div class="form-group">
-                                            <label for="productname">Store Location</label>
-                                            <input id="productname" name="location" type="text" class="form-control" required>
+                                            <label for="productname">Table Name</label>
+                                            <input id="productname" name="table_name" type="text" class="form-control" required>
                                         </div>
                                     </div>
                                 </div>
-
-                                <button type="submit" class="btn btn-success mr-1 waves-effect waves-light">Add Store</button>
+                                <button type="submit" class="btn btn-success mr-1 waves-effect waves-light">Add Table</button>
                             </form>
                         </div>
                     </div>
@@ -53,30 +45,28 @@
                     <div class="card">
                         <div class="card-body">
 
-                            <h4 class="card-title">Stores</h4>
+                            <h4 class="card-title">Tables</h4>
                             <p class="card-title-desc">
-                                Stores under Lexican
+                                Tables under Lexican
                             </p>
                             <table id="datatable-buttons" class="table table-striped table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                                 <thead>
                                     <tr>
                                         <th>ID</th>
                                         <th>Reference</th>
-                                        <th>Store Name</th>
-                                        <th>Location</th>
+                                        <th>Table Name</th>
                                         <th>Date Created</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                @foreach($stores as $key => $store)
+                                @foreach($tables as $key => $table)
                                     <tr>
-                                        <td>{{$store->id}}</td>
-                                        <td>{{$store->token}}</td>
-                                        <td>{{$store->store_name}}</td>
-                                        <td>{{$store->location}}</td>
-                                        <td>{{$store->created_at}}</td>
-                                        <td><button class="btn btn-sm btn-outline-primary waves-effect waves-light" data-toggle="modal" data-target="#edit-store-{{$key}}"> Edit</button></td>
+                                        <td>{{$table->id}}</td>
+                                        <td>{{$table->token}}</td>
+                                        <td>{{$table->table_name}}</td>
+                                        <td>{{$table->created_at}}</td>
+                                        <td><button class="btn btn-sm btn-outline-primary waves-effect waves-light" data-toggle="modal" data-target="#edit-table-{{$key}}"> Edit</button></td>
                                     </tr>
                                 @endforeach
                                 </tbody>
@@ -87,37 +77,30 @@
             </div>
         </div>
     </div>
-    @foreach($stores as $key => $store)
-        <div class="modal fade" id="edit-store-{{$key}}" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    @foreach($tables as $key => $table)
+        <div class="modal fade" id="edit-table-{{$key}}" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title mt-0" id="mySmallModalLabel">Edit Store</h5>
+                    <h5 class="modal-title mt-0" id="mySmallModalLabel">Edit Table Details</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <h4 class="card-title">Edit Store</h4>
+                    <h4 class="card-title">Edit Table Details</h4>
                     <p class="card-title-desc">Fill all information below correct.</p>
-                    <form method="post" action="{{route('edit-store-details', ['token' => $store->token])}}">
+                    <form method="post" action="{{route('edit-table-details', ['token' => $table->token])}}">
                         @csrf
                         <div class="row">
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label for="productname">Store Name</label>
-                                    <input id="productname" value="{{$store->store_name}}" name="store_name" type="text" class="form-control" required>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-12">
-                                <div class="form-group">
-                                    <label for="productname">Store Location</label>
-                                    <input id="productname" value="{{$store->location}}" name="location" type="text" class="form-control" required>
+                                    <label for="productname">Table Name</label>
+                                    <input id="productname" value="{{$table->table_name}}" name="table_name" type="text" class="form-control" required>
                                 </div>
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-success mr-1 waves-effect waves-light">Edit Store</button>
+                        <button type="submit" class="btn btn-success mr-1 waves-effect waves-light">Edit Table</button>
                     </form>
                 </div>
             </div><!-- /.modal-content -->

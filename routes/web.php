@@ -370,3 +370,53 @@ use Illuminate\Support\Facades\Route;
             'as' => 'admin.print-order-details',
             'uses' => 'Admin\OrderController@printOrderDetails',
         ])->middleware('checkAdmin');
+
+    Route::get('admin/view-activated-orders',[
+            'as' => 'admin.view-activated-orders',
+            'uses' => 'Admin\OrderController@viewActivatedOrders',
+        ])->middleware('checkAdmin');
+
+    Route::get('admin/add-table',[
+            'as' => 'admin.add-tables',
+            'uses' => 'Admin\OrderController@viewTables',
+        ])->middleware('checkAdmin');
+
+    Route::post('admin/submit-table-form',[
+            'as' => 'submit-table-form',
+            'uses' => 'Admin\OrderController@createTable',
+        ])->middleware('checkAdmin');
+
+    Route::post('admin/edit-table-details/{token}',[
+            'as' => 'edit-table-details',
+            'uses' => 'Admin\OrderController@editTable',
+        ])->middleware('checkAdmin');
+
+    Route::get('admin/add-room',[
+            'as' => 'admin.add-rooms',
+            'uses' => 'Admin\BookingController@viewRooms',
+        ])->middleware('checkAdmin');
+
+    Route::post('admin/submit-room-form',[
+            'as' => 'submit-room-form',
+            'uses' => 'Admin\BookingController@createRoom',
+        ])->middleware('checkAdmin');
+
+    Route::post('admin/edit-room-details/{token}',[
+            'as' => 'edit-room-details',
+            'uses' => 'Admin\BookingController@editRoom',
+        ])->middleware('checkAdmin');
+
+    Route::get('admin/add-period',[
+            'as' => 'admin.add-periods',
+            'uses' => 'Admin\BookingController@viewPeriod',
+        ])->middleware('checkAdmin');
+
+    Route::post('admin/submit-period-form',[
+            'as' => 'submit-period-form',
+            'uses' => 'Admin\BookingController@createPeriod',
+        ])->middleware('checkAdmin');
+
+    Route::post('admin/edit-period-details/{token}',[
+            'as' => 'edit-period-details',
+            'uses' => 'Admin\BookingController@editPeriod',
+        ])->middleware('checkAdmin');

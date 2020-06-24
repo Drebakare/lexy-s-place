@@ -57,9 +57,23 @@
                         <span>Orders</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
+                        <li><a href="{{route('admin.add-tables')}}">Add/Edit Table</a></li>
                         <li><a href="{{route('admin.raise-order')}}">Raise Order</a></li>
                         <li><a href="{{route('admin.view-orders')}}">My Orders</a></li>
                         <li><a href="{{route('admin.view-all-orders')}}">All Orders</a></li>
+                        <li><a href="{{route('admin.view-activated-orders')}}">My Activated Orders</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="bx bx-book-bookmark"></i>
+                        <span>Bookings</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li><a href="{{route('admin.add-rooms')}}">Add/Edit Room</a></li>
+                        <li><a href="{{route('admin.add-periods')}}">Add/Edit Period</a></li>
+                        <li><a href="{{route('admin.view-all-orders')}}">All Orders</a></li>
+                        <li><a href="{{route('admin.view-activated-orders')}}">My Activated Orders</a></li>
                     </ul>
                 </li>
                 <li class="d-none">
