@@ -72,8 +72,7 @@
                     <ul class="sub-menu" aria-expanded="false">
                         <li><a href="{{route('admin.add-rooms')}}">Add/Edit Room</a></li>
                         <li><a href="{{route('admin.add-periods')}}">Add/Edit Period</a></li>
-                        <li><a href="{{route('admin.view-all-orders')}}">All Orders</a></li>
-                        <li><a href="{{route('admin.view-activated-orders')}}">My Activated Orders</a></li>
+                        <li><a href="{{route('admin.view-all-bookings')}}">Add/View Booking</a></li>
                     </ul>
                 </li>
                 <li class="d-none">

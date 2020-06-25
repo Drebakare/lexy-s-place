@@ -420,3 +420,28 @@ use Illuminate\Support\Facades\Route;
             'as' => 'edit-period-details',
             'uses' => 'Admin\BookingController@editPeriod',
         ])->middleware('checkAdmin');
+
+    Route::get('admin/view-all-bookings',[
+            'as' => 'admin.view-all-bookings',
+            'uses' => 'Admin\BookingController@viewBookings',
+        ])->middleware('checkAdmin');
+
+    Route::post('admin/submit-booking-form',[
+            'as' => 'submit-booking-form',
+            'uses' => 'Admin\BookingController@createBooking',
+        ])->middleware('checkAdmin');
+
+    Route::get('admin/confirm-booking/{token}',[
+            'as' => 'admin.confirm-booking',
+            'uses' => 'Admin\BookingController@confirmBooking',
+        ])->middleware('checkAdmin');
+
+    Route::get('admin/cancel-booking/{token}',[
+            'as' => 'admin.cancel-booking',
+            'uses' => 'Admin\BookingController@cancelBooking',
+        ])->middleware('checkAdmin');
+
+    Route::get('admin/print-booking-receipt/{token}',[
+            'as' => 'admin.print-booking-receipt',
+            'uses' => 'Admin\BookingController@printBookingReceipt',
+        ])->middleware('checkAdmin');

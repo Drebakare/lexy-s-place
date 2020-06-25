@@ -9,11 +9,15 @@ use Illuminate\Support\Facades\Auth;
 class Booking extends Model
 {
     protected $fillable = [
-        'user_id', 'period_id', 'booking_status', 'receipt_no', 'token'
+        'user_id', 'period_id', 'booking_status', 'receipt_no', 'token', 'activated_by'
     ];
 
     public function user(){
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function activatedBy(){
+        return $this->belongsTo(User::class, 'activated_by');
     }
     public function period(){
         return $this->belongsTo(Period::class);

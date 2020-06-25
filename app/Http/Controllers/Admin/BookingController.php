@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\AuditTrail;
+use App\Booking;
 use App\Http\Controllers\Controller;
 use App\Period;
 use App\Room;
@@ -128,5 +129,101 @@ class BookingController extends Controller
         catch(\Exception $exception){
             return redirect()->back()->with('failure', 'Period could not be Edited');
         }
+    }
+    public function viewBookings(){
+        if (Auth::user()->store_id == null){
+            $periods = Period::get();
+            $bookings = Booking::orderBy('id', 'desc')->get();
+            foreach ($periods as $key =>  $period ){
+                $confirm_period = Booking::confirmAvailability($period);
+                if ($confirm_period){
+                    unset($periods[$key]);
+                }
+            }
+        }
+        else{
+            $periods = Period::where(['store_id' => Auth::user()->store_id])->get();
+            $bookings = Booking::where(['store_id' => Auth::user()->store_id])->get();
+            foreach ($periods as $key =>  $period ){
+                $confirm_period = Booking::confirmAvailability($period);
+                if ($confirm_period){
+                    unset($periods[$key]);
+                }
+            }
+        }
+        return view('Admin.Actions.create-bookings', compact('periods', 'bookings'));
+    }
+
+    public function createBooking(Request $request){
+        $this->validate($request, [
+            'period_id' => 'bail|required',
+        ]);
+        try {
+            //create a new booking
+            $new_booking = new Booking();
+            $new_booking->user_id = Auth::user()->id;
+            $new_booking->token = Str::random(15);
+            $new_booking->receipt_no = Str::random(15);
+            $new_booking->store_id = Auth::user()->store_id;
+            $new_booking->period_id = $request->period_id;
+            $new_booking->payment_status = 1;
+            $new_booking->save();
+            //log action
+            /*$action = "Created a new Period called ".$new_period->room_name;
+            AuditTrail::createLog(Auth::user()->id, $action);*/
+            return redirect()->back()->with('success', 'Booking successfully created');
+        }
+        catch(\Exception $exception){
+            return redirect()->back()->with('failure', 'Booking could not be created');
+        }
+    }
+
+    public function confirmBooking($token){
+        try {
+            $check_booking = Booking::where('token', $token)->first();
+            if ($check_booking){
+                $check_booking->booking_status = 1;
+                $check_booking->token = Str::random(15);;
+                $check_booking->activated_by = Auth::user()->id;
+                $check_booking->save();
+                return redirect()->back()->with('success', 'Booking Details Successfully Updated');
+            }
+            else{
+                return redirect()->back()->with('failure', 'Booking does not Exist');
+            }
+        }
+        catch(\Exception $exception){
+            return redirect()->back()->with('failure', 'Booking could not be Edited');
+        }
+    }
+
+    public function cancelBooking($token){
+        try {
+            $check_booking = Booking::where('token', $token)->first();
+            if ($check_booking){
+                $check_booking->booking_status = 0;
+                $check_booking->activated_by = null;
+                $check_booking->save();
+                return redirect()->back()->with('success', 'Booking Details Successfully Updated');
+            }
+            else{
+                return redirect()->back()->with('failure', 'Booking does not Exist');
+            }
+        }
+        catch(\Exception $exception){
+            return redirect()->back()->with('failure', 'Booking could not be Edited');
+        }
+    }
+
+    public function printBookingReceipt($token){
+        $booking = Booking::where('token', $token)->first();
+        if ($booking){
+
+            return view('Admin.Actions.print-booking-receipt', compact('booking'));
+        }
+        else{
+            return redirect()->back()->with('failure', 'Booking does not Exist');
+        }
+
     }
 }
