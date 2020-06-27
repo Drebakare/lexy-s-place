@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Period;
 use App\Room;
 use App\Table;
+use App\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -159,19 +160,37 @@ class BookingController extends Controller
             'period_id' => 'bail|required',
         ]);
         try {
-            //create a new booking
-            $new_booking = new Booking();
-            $new_booking->user_id = Auth::user()->id;
-            $new_booking->token = Str::random(15);
-            $new_booking->receipt_no = Str::random(15);
-            $new_booking->store_id = Auth::user()->store_id;
-            $new_booking->period_id = $request->period_id;
-            $new_booking->payment_status = 1;
-            $new_booking->save();
-            //log action
-            /*$action = "Created a new Period called ".$new_period->room_name;
-            AuditTrail::createLog(Auth::user()->id, $action);*/
-            return redirect()->back()->with('success', 'Booking successfully created');
+            $period = Period::where('id', $request->period_id)->first();
+            $confirm_period = Booking::confirmAvailability($period);
+            if ($confirm_period){
+                return redirect()->back()->with('failure', "Period already Booked, Kindly Select Another Period");
+            }
+            else{
+                //create a new booking
+                $new_booking = new Booking();
+                $new_booking->user_id = Auth::user()->id;
+                $new_booking->token = Str::random(15);
+                $new_booking->receipt_no = Str::random(15);
+                $new_booking->store_id = Auth::user()->store_id;
+                $new_booking->period_id = $request->period_id;
+                $new_booking->payment_status = 1;
+                $new_booking->save();
+
+                //record transactions
+                $transaction = new Transaction();
+                $transaction->user_id = Auth::user()->id;
+                $transaction->amount = $period->price;
+                $transaction->transaction_no = Str::random(15);
+                $transaction->transaction_type = 'Debit-Booking From Inhouse';
+                $transaction->transaction_status = 1;
+                $transaction->token = Str::random(15);
+                $transaction->store_id = Auth::user()->store_id;
+                $transaction->save();
+                //log action
+                /*$action = "Created a new Period called ".$new_period->room_name;
+                AuditTrail::createLog(Auth::user()->id, $action);*/
+                return redirect()->back()->with('success', 'Booking successfully created');
+            }
         }
         catch(\Exception $exception){
             return redirect()->back()->with('failure', 'Booking could not be created');

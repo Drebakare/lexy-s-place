@@ -445,3 +445,13 @@ use Illuminate\Support\Facades\Route;
             'as' => 'admin.print-booking-receipt',
             'uses' => 'Admin\BookingController@printBookingReceipt',
         ])->middleware('checkAdmin');
+
+    Route::get('admin/view-transactions',[
+            'as' => 'admin.view-transactions',
+            'uses' => 'Admin\TransactionController@viewTransactions',
+        ])->middleware('checkAdmin');
+
+    Route::get('admin/view-subscription-list',[
+            'as' => 'admin.view-subscription-list',
+            'uses' => 'Admin\TransactionController@viewSubscription',
+        ])->middleware('checkAdmin');

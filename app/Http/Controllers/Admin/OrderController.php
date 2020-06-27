@@ -44,11 +44,12 @@ class OrderController extends Controller
     public function userRaiseOrder(Request $request){
         try {
             $check_stock = false;
+            $failed_products = [];
             foreach ($request->sales as $sales){
                 $stock = Stock::where(['product_id' => $sales['product_id'], 'store_id' => Auth::user()->store_id])->first();
                 if ($stock->qty < $sales['quantity']){
                     $check_stock = true;
-                    break;
+                    array_push($failed_products, $sales['token']);
                 }
             }
             if ($check_stock){

@@ -75,6 +75,17 @@
                         <li><a href="{{route('admin.view-all-bookings')}}">Add/View Booking</a></li>
                     </ul>
                 </li>
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="bx bx-money"></i>
+                        <span>Transactions</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li><a href="{{route('admin.view-transactions')}}">All Transactions</a></li>
+                        <li><a href="{{route('admin.view-subscription-list')}}">View Membership Sub List</a></li>
+                        <li><a href="{{route('admin.view-all-bookings')}}">Add/View Booking</a></li>
+                    </ul>
+                </li>
                 <li class="d-none">
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
                         <i class="bx bx-layout"></i>

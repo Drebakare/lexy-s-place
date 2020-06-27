@@ -2,20 +2,17 @@
 @section('contents')
     <div class="page-content">
         <div class="container-fluid">
-
             <!-- start page title -->
             <div class="row">
                 <div class="col-12">
                     <div class="page-title-box d-flex align-items-center justify-content-between">
                         <h4 class="mb-0 font-size-18">Add User</h4>
-
                         <div class="page-title-right">
                             <ol class="breadcrumb m-0">
                                 <li class="breadcrumb-item"><a href="{{route('admin.dashboard')}}">Dashboards</a></li>
                                 <li class="breadcrumb-item active">Add User</li>
                             </ol>
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -66,12 +63,12 @@
                                         </div>
                                         <div class="form-group">
                                             <label class="control-label">Role</label>
-                                                <select name="role" class="form-control select2" required>
-                                                    <option value="">Select User's Role</option>
-                                                    @foreach($roles as $role)
-                                                        <option value="{{$role->id}}" @if($role->id == 2) disabled @endif>{{$role->role}}</option>
-                                                    @endforeach
-                                                </select>
+                                            <select name="role" class="form-control select2" required>
+                                                <option value="">Select User's Role</option>
+                                                @foreach($roles as $role)
+                                                    <option value="{{$role->id}}" @if($role->id == 2) disabled @endif>{{$role->role}}</option>
+                                                @endforeach
+                                            </select>
                                         </div>
                                      {{--   <div class="form-group">
                                             <label class="control-label">Category</label>
@@ -103,7 +100,6 @@
                                 </div>
                                 <button type="submit" class="btn btn-outline-success mr-1 waves-effect waves-light">Add User</button>
                             </form>
-
                         </div>
                     </div>
                 </div>

@@ -136,6 +136,9 @@
                                                             {{--
                                                                                                                 <span class="discounted-price">N8,000</span>
                                                             --}}
+                                                            <a {{--id="add-product"--}} href="#" data-toggle="modal" data-target="#display-confirmation-{{$product->token}}">
+                                                                <span class="discounted-price pl-3"><i class="fa fa-cart-plus"></i></span>
+                                                            </a>
                                                         </div>
                                                     </div>
 
@@ -174,6 +177,109 @@
             </div>
         </div>
     </div>
+    <meta name="_token" content="{{ app('Illuminate\Encryption\Encrypter')->encrypt(csrf_token()) }}" />
+    <div class="modal fade" id="cart-confirmation" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="staticBackdropLabel">Product Successfully Added To Cart</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <h6 style="padding-top: 11px !important;"> Effectively Added to Cart</h6>
+                        <div class="row" style="padding-top: 11px !important;">
+                            <div class="col-lg-6 col-md-6 col-sm-12  mb-3" >
+                                <a href="#" class="btn btn-outline-dark mt-0" data-dismiss="modal"><span style="font-size: 14px">Continue Shopping</span></a>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-12  mb-3">
+                                <a  href="{{route('user.cart')}}" class="btn btn-outline-success mt-0"><span style="font-size: 14px">View Cart and Checkout</span> </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @foreach($products as $product)
+        <div class="modal fade" id="display-confirmation-{{$product->token}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="staticBackdropLabel">Kindly Enter Product Quantity</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div>
+                            <h6 style="padding-top: 11px !important;"> Product Quantity</h6>
+                            <div class="row" style="padding-top: 11px !important;">
+                                <div class="col-lg-6 col-md-6 col-sm-12  mb-3" >
+                                    <div class="pro-qty mr-20 mb-xs-20">
+                                        <input id="product-qty" type="number" min="1">
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-12  mb-3">
+                                    <button  onclick="addProductToCart('{{$product->token}}')" class="btn btn-outline-success mt-0"><span style="font-size: 14px">Add to Cart</span> </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endforeach
+    <button type="button" id="product-added" class="btn btn-primary" data-toggle="modal" data-target="#cart-confirmation" hidden>
+        ""
+    </button>
+@endsection
+@section('script_contents')
+    <script type="text/javascript">
+        function addProductToCart(token){
+            var product_token =  token;
+            var product_qty = $('#product-qty').val();
+            if (product_qty === ""){
+                toastr.error('Kindly Supply the Product Quantity')
+            }
+            else{
+                $.ajaxSetup({
+                    headers: {
+                        'X-XSRF-Token': $('meta[name="_token"]').attr('content')
+                    }
+                });
+                var data =  {
+                    product_qty : product_qty,
+                    product_token: product_token,
+                    _token: '{!! csrf_token() !!}',
+                }
+                $.ajax({
+                    url: "{{route('product.add-to-cart') }}",
+                    method: 'POST',
+                    contentType:"application/json",
+                    dataType: "json",
+                    data: JSON.stringify(data),
+                    cache: false,
+                    success: function(status){
+                        if(status.status){
+                            $("#cart-info").html(status.info);
+                            $('#display-confirmation-'+product_token).modal('hide');
+                            $('#product-added').click();
+                        }
+                        else{
+                            console.log(status);
+                            toastr.error(status.msg);
+                        }
 
-    <!--=====  End of Cart page content  ======-->
+                    },
+                    failure: function (result) {
+                        console.log(result);
+                    }
+                });
+            }
+
+        }
+    </script>
 @endsection
